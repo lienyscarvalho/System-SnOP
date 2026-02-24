@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell
@@ -9,10 +9,7 @@ import {
   ArrowUpRight, ArrowDownRight, Clock, ShieldCheck, Lock, LogIn, Eye, EyeOff
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  regionalPerformance, operadoras, psrs,
-  statusAtribuicao, recomendacoesSeteDias
-} from './data/mockData';
+import { supabase } from './lib/supabase';
 
 const COLORS = ['#9d26ff', '#00d2ff', '#ff00c8', '#f59e0b'];
 
@@ -50,22 +47,95 @@ const MetricCard = ({ title, value, subtext, trend, icon: Icon, color }: MetricC
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
   const [searchTerm, setSearchTerm] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
+  const [loginError, setLoginError] = useState('');
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Simulando autenticação premium
-    if (loginForm.email && loginForm.password) {
-      setIsAuthenticated(true);
+  // S&OP data states
+  const [perf, setPerf] = useState<any>(null);
+  const [opsPerformance, setOpsPerformance] = useState<any[]>([]);
+  const [psrData, setPsrData] = useState<any[]>([]);
+  const [attrStatus, setAttrStatus] = useState<any[]>([]);
+  const [planActions, setPlanActions] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Check initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthenticated(!!session);
+      setLoading(false);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchDashboardData();
+    }
+  }, [isAuthenticated]);
+
+  const fetchDashboardData = async () => {
+    try {
+      const [
+        { data: perfData },
+        { data: opsData },
+        { data: psrsData },
+        { data: statusData },
+        { data: actionsData }
+      ] = await Promise.all([
+        supabase.from('regional_performance').select('*').single(),
+        supabase.from('operators_performance').select('*'),
+        supabase.from('psr_performance').select('*'),
+        supabase.from('attribution_status').select('*'),
+        supabase.from('action_plan').select('*')
+      ]);
+
+      if (perfData) setPerf(perfData);
+      if (opsData) setOpsPerformance(opsData);
+      if (psrsData) setPsrData(psrsData);
+      if (statusData) setAttrStatus(statusData);
+      if (actionsData) setPlanActions(actionsData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
     }
   };
 
-  const filteredPSRs = psrs.filter(psr =>
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginError('');
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: loginForm.email,
+      password: loginForm.password,
+    });
+
+    if (error) {
+      setLoginError(error.message);
+    }
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+  };
+
+  const filteredPSRs = psrData.filter(psr =>
     psr.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return (
@@ -123,6 +193,13 @@ const App = () => {
               </div>
             </div>
 
+            {loginError && (
+              <div className="bg-rose-500/10 border border-rose-500/20 rounded-xl p-4 flex items-center gap-3 text-rose-400 text-sm">
+                <AlertCircle size={18} />
+                {loginError}
+              </div>
+            )}
+
             <button
               type="submit"
               className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl py-4 font-bold tracking-wide hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-xl shadow-purple-600/20"
@@ -178,7 +255,7 @@ const App = () => {
 
         <div className="mt-auto mb-8">
           <button
-            onClick={() => setIsAuthenticated(false)}
+            onClick={handleLogout}
             className="p-3 text-zinc-500 hover:text-rose-400 transition-colors"
           >
             <LogIn size={20} className="rotate-180" />
@@ -222,22 +299,22 @@ const App = () => {
                 <div className="metric-grid">
                   <MetricCard
                     title="Meta D0"
-                    value={regionalPerformance.metaD0}
+                    value={perf?.meta_d0 || 0}
                     subtext="Instalações planejadas"
                     icon={Target}
                     color="#9d26ff"
                   />
                   <MetricCard
                     title="Realizado OK"
-                    value={regionalPerformance.realizado}
-                    subtext={`${((regionalPerformance.realizado / regionalPerformance.metaD0) * 100).toFixed(1)}% da meta`}
+                    value={perf?.realizado || 0}
+                    subtext={`${perf ? ((perf.realizado / perf.meta_d0) * 100).toFixed(1) : 0}% da meta`}
                     icon={CheckCircle2}
                     color="#10b981"
                     trend={-39}
                   />
                   <MetricCard
                     title="Projeção"
-                    value={regionalPerformance.projecao}
+                    value={perf?.projecao || 0}
                     subtext="Estimativa de fechamento"
                     icon={TrendingUp}
                     color="#00d2ff"
@@ -257,7 +334,7 @@ const App = () => {
                     <h4 className="section-title">Performance por Operadora</h4>
                     <div className="h-[300px] mt-4">
                       <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={operadoras}>
+                        <BarChart data={opsPerformance}>
                           <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2e" vertical={false} />
                           <XAxis dataKey="name" stroke="#71717a" axisLine={false} tickLine={false} />
                           <YAxis stroke="#71717a" axisLine={false} tickLine={false} />
@@ -285,7 +362,7 @@ const App = () => {
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                           <Pie
-                            data={statusAtribuicao}
+                            data={attrStatus}
                             innerRadius={70}
                             outerRadius={90}
                             paddingAngle={8}
@@ -293,7 +370,7 @@ const App = () => {
                             nameKey="status"
                             stroke="none"
                           >
-                            {statusAtribuicao.map((_, index) => (
+                            {attrStatus.map((_, index) => (
                               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                             ))}
                           </Pie>
@@ -308,7 +385,7 @@ const App = () => {
                       </div>
                     </div>
                     <div className="mt-4 grid grid-cols-2 gap-3">
-                      {statusAtribuicao.map((s, i) => (
+                      {attrStatus.map((s, i) => (
                         <div key={i} className="bg-white/5 p-2 rounded-lg border border-white/5">
                           <div className="flex items-center gap-2 mb-1">
                             <div className="w-2 h-2 rounded-full" style={{ background: COLORS[i % COLORS.length] }} />
@@ -359,8 +436,8 @@ const App = () => {
                             <td>{psr.total}</td>
                             <td>
                               <div className="flex items-center gap-2">
-                                <span className="text-rose-400 font-bold">{psr.semProducao}</span>
-                                <span className="text-zinc-600 text-xs">({((psr.semProducao / psr.total) * 100).toFixed(0)}%)</span>
+                                <span className="text-rose-400 font-bold">{psr.sem_producao}</span>
+                                <span className="text-zinc-600 text-xs">({((psr.sem_producao / psr.total) * 100).toFixed(0)}%)</span>
                               </div>
                             </td>
                             <td className="text-emerald-400 font-medium">{psr.oportunidades}</td>
@@ -369,12 +446,12 @@ const App = () => {
                                 <div className="flex-1 bg-zinc-900 h-2 rounded-full overflow-hidden border border-white/5">
                                   <motion.div
                                     initial={{ width: 0 }}
-                                    animate={{ width: `${((psr.total - psr.semProducao) / psr.total) * 100}%` }}
+                                    animate={{ width: `${((psr.total - psr.sem_producao) / psr.total) * 100}%` }}
                                     className="h-full bg-gradient-to-r from-purple-600 to-blue-500 rounded-full"
                                   />
                                 </div>
                                 <span className="text-xs font-bold text-zinc-400 w-8">
-                                  {(((psr.total - psr.semProducao) / psr.total) * 100).toFixed(0)}%
+                                  {(((psr.total - psr.sem_producao) / psr.total) * 100).toFixed(0)}%
                                 </span>
                               </div>
                             </td>
@@ -467,7 +544,7 @@ const App = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {recomendacoesSeteDias.map((rec, i) => (
+                  {planActions.map((rec, i) => (
                     <motion.div
                       key={i}
                       whileHover={{ scale: 1.02 }}
