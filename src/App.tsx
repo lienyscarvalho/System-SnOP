@@ -6,7 +6,8 @@ import {
 import {
   LayoutDashboard, Users, Target, GraduationCap, TrendingUp,
   AlertCircle, CheckCircle2, Navigation, Bell, Search,
-  ArrowUpRight, ArrowDownRight, Clock, ShieldCheck, Lock, LogIn, Eye, EyeOff
+  ArrowUpRight, ArrowDownRight, Clock, ShieldCheck, LogIn, Eye, EyeOff,
+  Activity, BarChart3, Layout
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from './lib/supabase';
@@ -139,119 +140,203 @@ const App = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6 bg-black relative overflow-hidden">
-        {/* Animated Background Circles */}
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-600/20 blur-[120px] rounded-full animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/10 blur-[120px] rounded-full animate-pulse" />
+      <div className="min-h-screen flex items-center justify-center p-6 bg-black relative overflow-hidden font-main">
+        <div className="login-background" />
+
+        {/* Dynamic Premium Orbs */}
+        <motion.div
+          animate={{
+            x: [0, 120, -60, 0],
+            y: [0, 80, 150, 0],
+            scale: [1, 1.2, 0.9, 1]
+          }}
+          transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+          className="orb w-[600px] h-[600px] bg-purple-600/20 -top-[20%] -left-[10%]"
+        />
+        <motion.div
+          animate={{
+            x: [0, -100, 80, 0],
+            y: [0, 150, -50, 0],
+            scale: [1, 0.8, 1.1, 1]
+          }}
+          transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
+          className="orb w-[500px] h-[500px] bg-blue-500/15 bottom-[-15%] right-[-5%]"
+        />
+        <motion.div
+          animate={{
+            x: [0, 40, -40, 0],
+            y: [0, -100, 40, 0],
+            opacity: [0.1, 0.3, 0.1]
+          }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          className="orb w-[300px] h-[300px] bg-pink-500/10 top-[40%] right-[15%]"
+        />
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="glass-card w-full max-w-md p-10 border-white/5 bg-white/5 relative z-10"
+          initial={{ opacity: 0, y: 40, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="glass-card w-full max-w-[440px] p-12 relative z-10 border-white/10"
         >
-          <div className="flex flex-col items-center mb-8">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center mb-4 shadow-lg shadow-purple-500/30">
-              <Lock size={32} className="text-white" />
-            </div>
-            <h1 className="text-3xl font-bold text-white mb-2">S&OP V.tal</h1>
-            <p className="text-zinc-400 text-sm">Entre com suas credenciais para acessar</p>
+          <div className="flex flex-col items-center mb-12">
+            <motion.div
+              initial={{ rotate: -10, scale: 0.8 }}
+              animate={{ rotate: 0, scale: 1 }}
+              transition={{ delay: 0.3, duration: 0.6, type: "spring" }}
+              className="w-24 h-24 rounded-[2rem] bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center mb-8 shadow-[0_20px_40px_rgba(157,38,255,0.3)] relative group"
+            >
+              <div className="absolute inset-0 rounded-[2rem] bg-white/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+              <Target size={44} className="text-white relative z-10" />
+            </motion.div>
+
+            <h1 className="text-5xl font-extrabold gradient-text mb-3 tracking-tight">S&OP V.tal</h1>
+            <p className="text-zinc-400 text-sm font-semibold tracking-[0.15em] uppercase opacity-70">Executive Management Portal</p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-6">
-            <div>
-              <label className="text-xs uppercase tracking-widest text-zinc-500 font-bold mb-2 block">E-mail Corporativo</label>
-              <div className="relative">
+          <form onSubmit={handleLogin} className="space-y-8">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.4 }}
+              className="space-y-3"
+            >
+              <div className="flex justify-between items-center ml-1">
+                <label className="text-[11px] uppercase tracking-[0.2em] text-zinc-500 font-bold">Client Identification</label>
+                <Users size={14} className="text-zinc-700" />
+              </div>
+              <div className="premium-input-container">
                 <input
                   type="email"
                   value={loginForm.email}
                   onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-purple-500/50 focus:bg-white/10 transition-all font-medium"
-                  placeholder="usuario@vtal.com.br"
+                  className="premium-input"
+                  placeholder="user@vtal.com.br"
                   required
                 />
               </div>
-            </div>
+            </motion.div>
 
-            <div>
-              <label className="text-xs uppercase tracking-widest text-zinc-500 font-bold mb-2 block">Sessão Segura</label>
-              <div className="relative">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.5 }}
+              className="space-y-3"
+            >
+              <div className="flex justify-between items-center ml-1">
+                <label className="text-[11px] uppercase tracking-[0.2em] text-zinc-500 font-bold">Secure Gateway</label>
+                <ShieldCheck size={14} className="text-zinc-700" />
+              </div>
+              <div className="relative premium-input-container">
                 <input
                   type={showPass ? "text" : "password"}
                   value={loginForm.password}
                   onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-purple-500/50 focus:bg-white/10 transition-all font-medium"
+                  className="premium-input"
                   placeholder="••••••••"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass(!showPass)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors"
+                  className="absolute right-5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-all p-1.5 rounded-lg hover:bg-white/5"
                 >
                   {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
-            </div>
+            </motion.div>
 
             {loginError && (
-              <div className="bg-rose-500/10 border border-rose-500/20 rounded-xl p-4 flex items-center gap-3 text-rose-400 text-sm">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-rose-500/10 border border-rose-500/20 rounded-2xl p-4 flex items-center gap-3 text-rose-400 text-xs font-bold shadow-[0_10px_20px_rgba(244,63,94,0.05)]"
+              >
                 <AlertCircle size={18} />
                 {loginError}
-              </div>
+              </motion.div>
             )}
 
-            <button
+            <motion.button
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
               type="submit"
-              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl py-4 font-bold tracking-wide hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-xl shadow-purple-600/20"
+              className="premium-btn w-full text-sm py-5"
             >
-              <LogIn size={20} />
-              ACESSAR DASHBOARD
-            </button>
+              <LogIn size={20} className="group-hover:translate-x-1 transition-transform" />
+              INITIALIZE CONNECTION
+            </motion.button>
           </form>
 
-          <div className="mt-8 text-center border-t border-white/5 pt-6">
-            <p className="text-xs text-zinc-600">Sistema Seguro de Gestão de S&OP • V.1.0.0</p>
-          </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="mt-12 text-center pt-8 border-t border-white/10"
+          >
+            <p className="text-[10px] text-zinc-600 font-black tracking-[0.3em] uppercase mb-2">Protocol Layer Secured</p>
+            <div className="flex justify-center items-center gap-3">
+              <span className="text-[9px] text-zinc-700 font-bold px-2 py-1 bg-white/5 rounded border border-white/5">V.3.1.2-ALPHA</span>
+              <span className="w-1 h-1 bg-zinc-800 rounded-full" />
+              <span className="text-[9px] text-zinc-700 font-bold px-2 py-1 bg-white/5 rounded border border-white/5">AES-256 ENCRYPTION</span>
+            </div>
+          </motion.div>
         </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Sidebar */}
+    <div className="min-h-screen bg-black text-white relative">
+      <div className="bg-mesh" />
+
+      {/* Dynamic Orbs for Dashboard */}
+      <motion.div
+        animate={{ x: [0, 100, 0], y: [0, 50, 0] }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        className="orb w-[600px] h-[600px] bg-purple-900/10 top-[10%] left-[-20%]"
+      />
+      <motion.div
+        animate={{ x: [0, -80, 0], y: [0, 100, 0] }}
+        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+        className="orb w-[400px] h-[400px] bg-blue-900/10 bottom-[10%] right-[-10%]"
+      />
+
       <nav className="sidebar">
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center mb-8 shadow-lg shadow-purple-500/20 cursor-pointer hover:scale-105 transition-transform">
-          <Target size={28} />
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center mb-8 shadow-lg shadow-purple-500/20 cursor-pointer hover:rotate-12 transition-transform">
+          <Target size={26} />
         </div>
-        <button
-          onClick={() => setActiveTab('overview')}
-          className={`p-3 rounded-xl transition-all ${activeTab === 'overview' ? 'bg-purple-600/20 text-purple-400 border border-purple-500/30' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}
-          title="Dashboard Geral"
-        >
-          <LayoutDashboard size={24} />
-        </button>
-        <button
-          onClick={() => setActiveTab('ops')}
-          className={`p-3 rounded-xl transition-all ${activeTab === 'ops' ? 'bg-purple-600/20 text-purple-400 border border-purple-500/30' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}
-          title="Análise Operacional"
-        >
-          <Users size={24} />
-        </button>
-        <button
-          onClick={() => setActiveTab('training')}
-          className={`p-3 rounded-xl transition-all ${activeTab === 'training' ? 'bg-purple-600/20 text-purple-400 border border-purple-500/30' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}
-          title="Capacitação"
-        >
-          <GraduationCap size={24} />
-        </button>
-        <button
-          onClick={() => setActiveTab('actions')}
-          className={`p-3 rounded-xl transition-all ${activeTab === 'actions' ? 'bg-purple-600/20 text-purple-400 border border-purple-500/30' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}
-          title="Plano de Ações"
-        >
-          <TrendingUp size={24} />
-        </button>
+
+        <div className="flex flex-col gap-4">
+          <button
+            onClick={() => setActiveTab('overview')}
+            className={`p-3 rounded-xl transition-all ${activeTab === 'overview' ? 'bg-purple-600/20 text-purple-400 border border-purple-500/30' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}
+            title="Dashboard Geral"
+          >
+            <LayoutDashboard size={24} />
+          </button>
+          <button
+            onClick={() => setActiveTab('ops')}
+            className={`p-3 rounded-xl transition-all ${activeTab === 'ops' ? 'bg-purple-600/20 text-purple-400 border border-purple-500/30' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}
+            title="Análise Operacional"
+          >
+            <Users size={24} />
+          </button>
+          <button
+            onClick={() => setActiveTab('training')}
+            className={`p-3 rounded-xl transition-all ${activeTab === 'training' ? 'bg-purple-600/20 text-purple-400 border border-purple-500/30' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}
+            title="Capacitação"
+          >
+            <GraduationCap size={24} />
+          </button>
+          <button
+            onClick={() => setActiveTab('actions')}
+            className={`p-3 rounded-xl transition-all ${activeTab === 'actions' ? 'bg-purple-600/20 text-purple-400 border border-purple-500/30' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}
+            title="Plano de Ações"
+          >
+            <TrendingUp size={24} />
+          </button>
+        </div>
 
         <div className="mt-auto mb-8">
           <button
@@ -263,26 +348,26 @@ const App = () => {
         </div>
       </nav>
 
-      {/* Main Content */}
       <main className="main-content">
         <div className="dashboard-container">
           {/* Header */}
-          <header className="flex justify-between items-center mb-10">
+          <header className="flex justify-between items-center mb-12">
             <div>
-              <h1 className="text-3xl font-bold gradient-text">S&OP Management System</h1>
-              <p className="text-zinc-500 text-sm mt-1 flex items-center gap-2">
+              <h1 className="text-5xl font-extrabold gradient-text tracking-tight">S&OP Manager</h1>
+              <p className="text-zinc-500 text-sm mt-2 flex items-center gap-2 font-medium">
                 <Navigation size={14} className="text-purple-400" />
-                Regional Sudeste • Rio de Janeiro • Julho 2025
+                Regional Sudeste / Rio de Janeiro <span className="text-zinc-800">•</span> Julho 2025
               </p>
             </div>
             <div className="flex items-center gap-4">
-              <div className="glass-card py-2 px-4 flex items-center gap-2 border-white/5">
+              <div className="glass-card py-2.5 px-6 flex items-center gap-3 border-white/5">
                 <Clock size={16} className="text-purple-400" />
-                <span className="text-sm font-medium">Snapshot: 23/07/2025 17:00</span>
+                <span className="text-xs font-bold tracking-wider uppercase text-zinc-400">Sync: 11:24 PROD</span>
               </div>
-              <button className="p-3 bg-white/5 rounded-full border border-white/5 hover:border-purple-500/50 transition-all group overflow-hidden relative">
-                <Bell size={20} className="group-hover:animate-bounce" />
-                <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full"></span>
+              <button className="w-12 h-12 flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 hover:border-purple-500/50 transition-all group relative">
+                <Bell size={20} className="group-hover:text-purple-400" />
+                <span className="absolute top-3 right-3 w-2 h-2 bg-rose-500 rounded-full shadow-lg shadow-rose-500/50 animate-ping"></span>
+                <span className="absolute top-3 right-3 w-2 h-2 bg-rose-500 rounded-full"></span>
               </button>
             </div>
           </header>
@@ -294,6 +379,7 @@ const App = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
+                className="space-y-8"
               >
                 {/* Metrics Grid */}
                 <div className="metric-grid">
@@ -329,26 +415,26 @@ const App = () => {
                 </div>
 
                 {/* Charts Section */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
-                  <div className="lg:col-span-2 glass-card border-white/5 overflow-hidden">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  <div className="lg:col-span-2 glass-card">
                     <h4 className="section-title">Performance por Operadora</h4>
-                    <div className="h-[300px] mt-4">
+                    <div className="h-[350px] mt-6">
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={opsPerformance}>
                           <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2e" vertical={false} />
-                          <XAxis dataKey="name" stroke="#71717a" axisLine={false} tickLine={false} />
-                          <YAxis stroke="#71717a" axisLine={false} tickLine={false} />
+                          <XAxis dataKey="name" stroke="#71717a" axisLine={false} tickLine={false} fontSize={11} />
+                          <YAxis stroke="#71717a" axisLine={false} tickLine={false} fontSize={11} />
                           <Tooltip
                             cursor={{ fill: 'rgba(255,255,255,0.03)' }}
-                            contentStyle={{ background: '#0a0a0c', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}
+                            contentStyle={{ background: '#0a0a0c', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}
                             itemStyle={{ color: '#fff' }}
                           />
-                          <Bar dataKey="meta" name="Meta" fill="#2a2a2e" radius={[4, 4, 0, 0]} />
-                          <Bar dataKey="ok" name="Realizado" fill="url(#colorOk)" radius={[4, 4, 0, 0]} />
+                          <Bar dataKey="meta" name="Meta" fill="#1e1e24" radius={[6, 6, 0, 0]} />
+                          <Bar dataKey="ok" name="Realizado" fill="url(#colorOk)" radius={[6, 6, 0, 0]} />
                           <defs>
                             <linearGradient id="colorOk" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="#9d26ff" stopOpacity={0.8} />
-                              <stop offset="95%" stopColor="#9d26ff" stopOpacity={0.2} />
+                              <stop offset="5%" stopColor="#9d26ff" stopOpacity={0.9} />
+                              <stop offset="95%" stopColor="#9d26ff" stopOpacity={0.3} />
                             </linearGradient>
                           </defs>
                         </BarChart>
@@ -356,16 +442,16 @@ const App = () => {
                     </div>
                   </div>
 
-                  <div className="glass-card border-white/5">
-                    <h4 className="section-title">Distribuição de Status</h4>
-                    <div className="h-[300px] relative">
+                  <div className="glass-card">
+                    <h4 className="section-title">Status de Atribuição</h4>
+                    <div className="h-[300px] relative mt-4">
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                           <Pie
                             data={attrStatus}
-                            innerRadius={70}
-                            outerRadius={90}
-                            paddingAngle={8}
+                            innerRadius={75}
+                            outerRadius={95}
+                            paddingAngle={10}
                             dataKey="count"
                             nameKey="status"
                             stroke="none"
@@ -379,19 +465,19 @@ const App = () => {
                           />
                         </PieChart>
                       </ResponsiveContainer>
-                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-                        <p className="text-zinc-500 text-[10px] uppercase font-bold tracking-widest">Total</p>
-                        <p className="text-2xl font-bold">171</p>
+                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
+                        <p className="text-zinc-500 text-[10px] uppercase font-bold tracking-[0.2em]">Total</p>
+                        <p className="text-3xl font-extrabold text-white">171</p>
                       </div>
                     </div>
-                    <div className="mt-4 grid grid-cols-2 gap-3">
+                    <div className="mt-8 grid grid-cols-2 gap-3">
                       {attrStatus.map((s, i) => (
-                        <div key={i} className="bg-white/5 p-2 rounded-lg border border-white/5">
-                          <div className="flex items-center gap-2 mb-1">
+                        <div key={i} className="bg-white/5 p-3 rounded-xl border border-white/5 flex flex-col gap-1">
+                          <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full" style={{ background: COLORS[i % COLORS.length] }} />
-                            <span className="text-zinc-500 text-[10px] font-bold uppercase">{s.status}</span>
+                            <span className="text-zinc-500 text-[10px] font-extrabold uppercase tracking-widest">{s.status}</span>
                           </div>
-                          <span className="text-sm font-bold">{s.count}</span>
+                          <span className="text-lg font-bold">{s.count}</span>
                         </div>
                       ))}
                     </div>
@@ -399,66 +485,71 @@ const App = () => {
                 </div>
 
                 {/* PSR Performance with Filters */}
-                <div className="glass-card border-white/5">
-                  <div className="flex justify-between items-center mb-6">
-                    <h4 className="section-title !mb-0">Análise por PSR (Prestador)</h4>
+                <div className="glass-card">
+                  <div className="flex justify-between items-center mb-10">
+                    <h4 className="section-title !mb-0">
+                      <Users size={20} className="text-purple-400" />
+                      Performance por Prestador (PSR)
+                    </h4>
                     <div className="relative">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
+                      <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
                       <input
                         type="text"
-                        placeholder="Buscar PSR..."
+                        placeholder="Pesquisa inteligente..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:border-purple-500/50 transition-all"
+                        className="bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-xs font-bold focus:outline-none focus:border-purple-500/50 transition-all min-w-[300px]"
                       />
                     </div>
                   </div>
-                  <div className="overflow-x-auto scroll-hide">
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>PSR</th>
-                          <th>Total Técnicos</th>
-                          <th>Ociosidade (Sem Prod)</th>
-                          <th>Oportunidades</th>
-                          <th>Eficiência de Alocação</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {filteredPSRs.map((psr, i) => (
-                          <tr key={i} className="hover:bg-white/5 transition-colors border-b border-white/5">
-                            <td className="font-bold flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-xs">
-                                {psr.name.substring(0, 2)}
-                              </div>
-                              {psr.name}
-                            </td>
-                            <td>{psr.total}</td>
-                            <td>
-                              <div className="flex items-center gap-2">
-                                <span className="text-rose-400 font-bold">{psr.sem_producao}</span>
-                                <span className="text-zinc-600 text-xs">({((psr.sem_producao / psr.total) * 100).toFixed(0)}%)</span>
-                              </div>
-                            </td>
-                            <td className="text-emerald-400 font-medium">{psr.oportunidades}</td>
-                            <td>
-                              <div className="flex items-center gap-3">
-                                <div className="flex-1 bg-zinc-900 h-2 rounded-full overflow-hidden border border-white/5">
-                                  <motion.div
-                                    initial={{ width: 0 }}
-                                    animate={{ width: `${((psr.total - psr.sem_producao) / psr.total) * 100}%` }}
-                                    className="h-full bg-gradient-to-r from-purple-600 to-blue-500 rounded-full"
-                                  />
-                                </div>
-                                <span className="text-xs font-bold text-zinc-400 w-8">
-                                  {(((psr.total - psr.sem_producao) / psr.total) * 100).toFixed(0)}%
-                                </span>
-                              </div>
-                            </td>
+                  <div className="table-container">
+                    <div className="overflow-x-auto scroll-hide">
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>Identificação PSR</th>
+                            <th>Total Força</th>
+                            <th>Ociosidade Crit.</th>
+                            <th>Pipeline Oport.</th>
+                            <th>Comprometimento</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody>
+                          {filteredPSRs.map((psr, i) => (
+                            <tr key={i}>
+                              <td className="font-bold flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-xl bg-purple-600/10 flex items-center justify-center text-xs font-black text-purple-400">
+                                  {psr.name.substring(0, 2).toUpperCase()}
+                                </div>
+                                <span>{psr.name}</span>
+                              </td>
+                              <td className="font-semibold text-zinc-300">{psr.total}</td>
+                              <td>
+                                <div className="flex items-center gap-2">
+                                  <span className="text-rose-400 font-bold">{psr.sem_producao}</span>
+                                  <span className="text-zinc-600 text-[10px] font-bold">({((psr.sem_producao / psr.total) * 100).toFixed(0)}%)</span>
+                                </div>
+                              </td>
+                              <td className="text-emerald-400 font-bold">{psr.oportunidades}</td>
+                              <td>
+                                <div className="flex items-center gap-4">
+                                  <div className="flex-1 bg-zinc-900 h-2 rounded-full overflow-hidden border border-white/5">
+                                    <motion.div
+                                      initial={{ width: 0 }}
+                                      animate={{ width: `${((psr.total - psr.sem_producao) / psr.total) * 100}%` }}
+                                      className="h-full bg-gradient-to-r from-purple-600 to-blue-500 rounded-full"
+                                    />
+                                  </div>
+                                  <span className="text-xs font-black text-zinc-400">
+                                    {(((psr.total - psr.sem_producao) / psr.total) * 100).toFixed(0)}%
+                                  </span>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -467,59 +558,99 @@ const App = () => {
             {activeTab === 'ops' && (
               <motion.div
                 key="ops"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="space-y-6"
+                exit={{ opacity: 0, y: -30 }}
+                className="space-y-8"
               >
-                <div className="glass-card border-white/5 overflow-hidden relative">
-                  <div className="absolute top-0 right-0 p-8 opacity-10">
-                    <Users size={120} />
-                  </div>
-                  <h4 className="section-title">Visão Detalhada da Operação</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div className="p-4 rounded-xl bg-white/5 border border-white/5">
-                      <p className="text-zinc-500 text-xs font-bold uppercase mb-1">Total Técnicos</p>
-                      <p className="text-2xl font-bold">1.421</p>
+                <div className="glass-card !p-0">
+                  <div className="p-10 border-b border-white/5 flex justify-between items-center">
+                    <div>
+                      <h4 className="section-title !mb-1 text-2xl">
+                        <Activity size={24} className="text-blue-400" />
+                        Visão Detalhada da Operação
+                      </h4>
+                      <p className="text-zinc-500 text-sm font-medium">Análise volumétrica da regional por especialidade técnica</p>
                     </div>
-                    <div className="p-4 rounded-xl bg-white/5 border border-white/5">
-                      <p className="text-zinc-500 text-xs font-bold uppercase mb-1">Sem Instalação OK</p>
-                      <p className="text-2xl font-bold text-rose-500">702</p>
-                    </div>
-                    <div className="p-4 rounded-xl bg-purple-600/10 border border-purple-500/20">
-                      <p className="text-purple-400 text-xs font-bold uppercase mb-1">Oportunidades Pipeline</p>
-                      <p className="text-2xl font-bold">1.836</p>
-                    </div>
-                    <div className="p-4 rounded-xl bg-blue-600/10 border border-blue-500/20">
-                      <p className="text-blue-400 text-xs font-bold uppercase mb-1">Média de Eficácia</p>
-                      <p className="text-2xl font-bold">64%</p>
-                    </div>
+                    <div className="px-4 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs font-black text-emerald-400 tracking-widest">LIVE STATUS</div>
                   </div>
 
-                  <h5 className="text-sm font-bold text-zinc-400 mb-4 uppercase tracking-widest">Concentração por Setor (Top 5)</h5>
-                  <div className="space-y-4">
-                    {[
-                      { s: 'RJ.BGU.BGU.FTTH', t: 26, sp: 19 },
-                      { s: 'RJ.DQX.DQX.FTTH', t: 23, sp: 15 },
-                      { s: 'RS.PA2.IPN.11', t: 20, sp: 16 },
-                      { s: 'RJ.BTJ.ALV.FTTH', t: 18, sp: 16 },
-                      { s: 'RJ.BRB.BRB.FTTH', t: 18, sp: 16 }
-                    ].map((item, i) => (
-                      <div key={i} className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
-                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-lg bg-zinc-900 flex items-center justify-center font-bold text-zinc-500">0{i + 1}</div>
-                          <div>
-                            <p className="font-bold text-sm tracking-wide">{item.s}</p>
-                            <p className="text-xs text-zinc-500">{item.t} técnicos total</p>
+                  <div className="p-10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                      {[
+                        { label: "Total Técnicos", val: "1.421", color: "white", icon: Users },
+                        { label: "Sem Instalação OK", val: "702", color: "rose-500", icon: AlertCircle },
+                        { label: "Oportunidades Pipeline", val: "1.836", color: "purple-400", icon: TrendingUp },
+                        { label: "Eficácia Geral", val: "64%", color: "blue-400", icon: Target }
+                      ].map((m, i) => (
+                        <div key={i} className="p-7 rounded-2xl bg-white/[0.02] border border-white/5 border-b-2 border-b-white/10">
+                          <div className="flex justify-between items-start mb-4">
+                            <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">{m.label}</p>
+                            <m.icon size={18} className="text-zinc-600" />
                           </div>
+                          <p className={`text-4xl font-black text-${m.color}`}>{m.val}</p>
                         </div>
-                        <div className="text-right">
-                          <p className="text-rose-400 font-bold text-sm">{item.sp} Ociosos</p>
-                          <div className="w-32 h-1.5 bg-zinc-900 rounded-full mt-1 overflow-hidden">
-                            <div className="h-full bg-rose-500" style={{ width: `${(item.sp / item.t) * 100}%` }} />
-                          </div>
+                      ))}
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                      <div className="space-y-6">
+                        <h5 className="text-xs font-black text-zinc-500 flex items-center gap-2 uppercase tracking-widest">
+                          <BarChart3 size={14} className="text-purple-400" /> Concentração por Setor
+                        </h5>
+                        <div className="space-y-4">
+                          {[
+                            { s: 'RJ.BGU.BGU.FTTH', t: 26, sp: 19 },
+                            { s: 'RJ.DQX.DQX.FTTH', t: 23, sp: 15 },
+                            { s: 'RS.PA2.IPN.11', t: 20, sp: 16 },
+                            { s: 'RJ.BTJ.ALV.FTTH', t: 18, sp: 16 }
+                          ].map((item, i) => (
+                            <div key={i} className="p-5 bg-white/[0.03] rounded-2xl border border-white/5 flex items-center justify-between">
+                              <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-xl bg-zinc-900 flex items-center justify-center font-black text-xs text-zinc-500">0{i + 1}</div>
+                                <div>
+                                  <p className="font-bold text-sm tracking-tight">{item.s}</p>
+                                  <p className="text-[10px] text-zinc-600 font-bold uppercase">{item.t} técnicos</p>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-rose-400 font-black text-sm">{item.sp} Ociosos</p>
+                                <div className="w-32 h-1.5 bg-black rounded-full mt-1.5 overflow-hidden">
+                                  <motion.div
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${(item.sp / item.t) * 100}%` }}
+                                    className="h-full bg-rose-500"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       </div>
-                    ))}
+
+                      <div className="space-y-6">
+                        <h5 className="text-xs font-black text-zinc-500 flex items-center gap-2 uppercase tracking-widest">
+                          <Layout size={14} className="text-blue-400" /> Histograma de Especialidades
+                        </h5>
+                        <div className="h-[350px] w-full">
+                          <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={opsPerformance} layout="vertical">
+                              <XAxis type="number" hide />
+                              <YAxis dataKey="label" type="category" stroke="#52525b" fontSize={10} width={80} axisLine={false} tickLine={false} fontWeight={700} />
+                              <Tooltip
+                                cursor={{ fill: 'rgba(255,255,255,0.02)' }}
+                                contentStyle={{ background: '#0a0a0f', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px' }}
+                              />
+                              <Bar dataKey="value" radius={[0, 6, 6, 0]}>
+                                {opsPerformance.map((_, index) => (
+                                  <Cell key={index} fill={index % 2 === 0 ? 'var(--vtal-purple)' : 'var(--vtal-blue)'} fillOpacity={0.8} />
+                                ))}
+                              </Bar>
+                            </BarChart>
+                          </ResponsiveContainer>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -528,51 +659,54 @@ const App = () => {
             {activeTab === 'actions' && (
               <motion.div
                 key="actions"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="space-y-6"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.05 }}
+                className="space-y-8"
               >
                 <div className="flex justify-between items-end mb-4">
                   <div>
-                    <h4 className="section-title !mb-0">Plano de Ação Estratégico</h4>
-                    <p className="text-zinc-500 text-xs mt-1">Recomendações baseadas no diagnóstico de 11/02/2026</p>
+                    <h4 className="text-3xl font-black gradient-text">Roadmap Estratégico</h4>
+                    <p className="text-zinc-500 text-sm mt-2 font-medium">Priorização de ações imediatas para reversão de indicadores críticos</p>
                   </div>
-                  <div className="flex gap-2">
-                    <span className="tag tag-danger">Alta Prioridade</span>
-                    <span className="tag bg-white/10 text-white border border-white/10">Snapshot Jul/25</span>
+                  <div className="flex gap-3">
+                    <span className="px-4 py-2 rounded-lg bg-rose-500/10 border border-rose-500/20 text-xs font-black text-rose-500 tracking-widest uppercase">Crítico</span>
+                    <span className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-xs font-bold text-white tracking-widest uppercase">Q3 2025</span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {planActions.map((rec, i) => (
                     <motion.div
                       key={i}
-                      whileHover={{ scale: 1.02 }}
-                      className="glass-card border-white/5 border-l-4 border-l-purple-500 bg-gradient-to-br from-white/5 to-transparent"
+                      whileHover={{ y: -10 }}
+                      className="glass-card !p-8 border-l-4 border-l-purple-500 relative group overflow-hidden"
                     >
-                      <div className="flex justify-between mb-4">
-                        <span className="text-purple-400 font-bold text-sm uppercase tracking-tighter">{rec.dia}</span>
-                        <span className={`tag ${rec.impacto === 'Crítica' ? 'tag-danger' : 'tag-success'}`}>
+                      <div className="absolute -top-10 -right-10 w-32 h-32 bg-purple-500/5 blur-[40px] group-hover:bg-purple-500/10 transition-colors" />
+                      <div className="flex justify-between items-center mb-6">
+                        <span className="text-purple-400 font-extrabold text-[10px] uppercase tracking-[0.2em]">{rec.dia}</span>
+                        <div className={`tag ${rec.impacto === 'Crítica' ? 'tag-danger' : 'tag-success'}`}>
                           {rec.impacto}
-                        </span>
-                      </div>
-                      <p className="text-sm leading-relaxed font-medium mb-4">{rec.acao}</p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex -space-x-2">
-                          {[1, 2, 3].map(j => <div key={j} className="w-6 h-6 rounded-full border border-black bg-zinc-800 flex items-center justify-center text-[8px] font-bold">U{j}</div>)}
                         </div>
-                        <button className="text-[10px] font-bold text-purple-400 hover:text-purple-300 flex items-center gap-1">
-                          VER DETALHES <ArrowUpRight size={10} />
+                      </div>
+                      <p className="text-lg font-bold leading-tight mb-8 text-zinc-100">{rec.acao}</p>
+                      <div className="pt-6 border-t border-white/5 flex items-center justify-between">
+                        <div className="flex -space-x-2">
+                          {[1, 2, 3].map(j => <div key={j} className="w-7 h-7 rounded-full border border-black bg-zinc-800 flex items-center justify-center text-[10px] font-black">U{j}</div>)}
+                        </div>
+                        <button className="text-[10px] font-black text-purple-400 hover:text-white transition-colors flex items-center gap-1 leading-none">
+                          DETALHES <ArrowUpRight size={12} />
                         </button>
                       </div>
                     </motion.div>
                   ))}
 
-                  {/* Placeholder for Strategic Long Term */}
-                  <div className="glass-card border-white/5 border-dashed bg-transparent flex flex-col items-center justify-center text-center p-8">
-                    <ShieldCheck size={32} className="text-zinc-700 mb-2" />
-                    <p className="text-zinc-600 text-xs font-bold uppercase tracking-widest">Ações Táticas (30-90 dias)</p>
-                    <p className="text-[10px] text-zinc-700 mt-1">Clique para visualizar roadmap expandido</p>
+                  <div className="glass-card border-dashed border-zinc-800 bg-transparent flex flex-col items-center justify-center text-center p-12 opacity-50 hover:opacity-100 transition-opacity cursor-pointer">
+                    <div className="w-16 h-16 rounded-3xl bg-white/5 flex items-center justify-center mb-6">
+                      <ShieldCheck size={32} className="text-zinc-600" />
+                    </div>
+                    <p className="text-zinc-500 text-xs font-black uppercase tracking-[0.2em]">Planejamento Tático</p>
+                    <p className="text-[10px] text-zinc-700 font-bold mt-2 leading-relaxed">Clique para configurar novas diretrizes e alertas</p>
                   </div>
                 </div>
               </motion.div>
@@ -581,86 +715,77 @@ const App = () => {
             {activeTab === 'training' && (
               <motion.div
                 key="training"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="glass-card border-white/5"
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="glass-card !p-0"
               >
-                <div className="flex justify-between items-center mb-8">
+                <div className="p-10 border-b border-white/5 flex justify-between items-center bg-gradient-to-r from-white/[0.01] to-transparent">
                   <div>
-                    <h4 className="section-title !mb-0">Matriz de Capacitação Técnica</h4>
-                    <p className="text-zinc-500 text-xs mt-1">Progresso por núcleo de conhecimento</p>
+                    <h4 className="section-title !mb-1 text-2xl">Matriz de Capacitação Técnica</h4>
+                    <p className="text-zinc-500 text-sm font-medium">Acompanhamento de gap de habilidades e produtividade especializada</p>
                   </div>
-                  <div className="p-3 bg-white/5 rounded-xl border border-white/5 flex items-center gap-3">
-                    <span className="text-xs font-bold text-zinc-400">STATUS GERAL</span>
-                    <div className="w-24 h-2 bg-zinc-900 rounded-full overflow-hidden">
-                      <div className="h-full bg-emerald-500" style={{ width: '75%' }} />
+                  <div className="flex items-center gap-6">
+                    <div className="text-right">
+                      <span className="text-zinc-500 text-[10px] font-black uppercase tracking-widest block mb-1">Status Geral</span>
+                      <span className="text-3xl font-black text-emerald-400">75%</span>
                     </div>
-                    <span className="text-xs font-bold text-emerald-400">75%</span>
+                    <div className="w-32 h-2.5 bg-black rounded-full overflow-hidden border border-white/5">
+                      <div className="h-full bg-gradient-to-r from-emerald-600 to-emerald-400" style={{ width: '75%' }} />
+                    </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-6">
-                    <div className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-purple-500/20 transition-colors group">
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="w-12 h-12 rounded-xl bg-purple-600/10 flex items-center justify-center group-hover:bg-purple-600/20 transition-colors">
-                          <GraduationCap size={24} className="text-purple-400" />
+                <div className="p-10 grid grid-cols-1 md:grid-cols-2 gap-10">
+                  <div className="space-y-8">
+                    {[
+                      { title: "Fundamentos & Normas", desc: "Fibra Óptica, Técnicas de Fusão e Certificação.", h: "32h", status: "tag-success", perc: "94%" },
+                      { title: "Experiência do Cliente", desc: "Comunicação, Empatia e Pós-atendimento.", h: "16h", status: "tag-warning", perc: "82%" }
+                    ].map((m, i) => (
+                      <motion.div key={i} whileHover={{ x: 8 }} className="p-8 rounded-2xl bg-white/[0.03] border border-white/5 group hover:bg-white/[0.05] transition-all">
+                        <div className="flex justify-between items-start mb-6">
+                          <div className="w-14 h-14 rounded-2xl bg-purple-600/10 flex items-center justify-center group-hover:bg-purple-600/20 transition-all text-purple-400">
+                            {i % 2 === 0 ? <GraduationCap size={28} /> : <Users size={28} />}
+                          </div>
+                          <span className={`tag ${m.status}`}>Módulo Concluído</span>
                         </div>
-                        <span className="tag tag-success">CONCLUÍDO</span>
-                      </div>
-                      <h5 className="font-bold text-lg mb-2 tracking-tight">Módulo 1: Fundamentos & Normas</h5>
-                      <p className="text-sm text-zinc-500 mb-4 font-medium leading-relaxed">Instalação de Fibra Óptica, Técnicas de Fusão e Certificação de Links.</p>
-                      <div className="flex items-center gap-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
-                        <span>32 Horas</span>
-                        <span>•</span>
-                        <span>94% Aproveitamento</span>
-                      </div>
-                    </div>
-
-                    <div className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-blue-500/20 transition-colors group">
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="w-12 h-12 rounded-xl bg-blue-600/10 flex items-center justify-center group-hover:bg-blue-600/20 transition-colors">
-                          <Users size={24} className="text-blue-400" />
+                        <h5 className="text-xl font-black mb-2 tracking-tight">{m.title}</h5>
+                        <p className="text-sm text-zinc-500 mb-6 font-medium">{m.desc}</p>
+                        <div className="flex items-center gap-4 text-[10px] font-black text-zinc-400 uppercase tracking-widest">
+                          <span>{m.h} Dedicação</span>
+                          <span className="text-zinc-800">•</span>
+                          <span className="text-emerald-400">{m.perc} Performance</span>
                         </div>
-                        <span className="tag tag-warning">AGUARDANDO REFORÇO</span>
-                      </div>
-                      <h5 className="font-bold text-lg mb-2 tracking-tight">Módulo 2: Experiência do Cliente</h5>
-                      <p className="text-sm text-zinc-500 mb-4 font-medium leading-relaxed">Comunicação, Empatia, Gestão de Conflitos e Feedback Pós-atendimento.</p>
-                      <div className="flex items-center gap-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
-                        <span>16 Horas</span>
-                        <span>•</span>
-                        <span>82% Aproveitamento</span>
-                      </div>
-                    </div>
+                      </motion.div>
+                    ))}
                   </div>
 
-                  <div className="space-y-6">
-                    <div className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-emerald-500/20 transition-colors group">
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="w-12 h-12 rounded-xl bg-emerald-600/10 flex items-center justify-center group-hover:bg-emerald-600/20 transition-colors">
-                          <TrendingUp size={24} className="text-emerald-400" />
+                  <div className="space-y-8">
+                    <div className="p-8 rounded-2xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.05] transition-all">
+                      <div className="flex justify-between items-start mb-6">
+                        <div className="w-14 h-14 rounded-2xl bg-emerald-600/10 flex items-center justify-center text-emerald-400">
+                          <TrendingUp size={28} />
                         </div>
-                        <span className="tag tag-success">CONCLUÍDO</span>
+                        <span className="tag tag-success">Módulo Concluído</span>
                       </div>
-                      <h5 className="font-bold text-lg mb-2 tracking-tight">Módulo 3: Análise de Dados (KPIs)</h5>
-                      <p className="text-sm text-zinc-500 mb-4 font-medium leading-relaxed">Capacitação em TMA, TRPV, TFT, NPS e Metodologias de RCA (5 PQS).</p>
-                      <div className="flex items-center gap-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
-                        <span>24 Horas</span>
-                        <span>•</span>
-                        <span>88% Aproveitamento</span>
+                      <h5 className="text-xl font-black mb-2 tracking-tight">Análise de Dados (KPIs)</h5>
+                      <p className="text-sm text-zinc-500 mb-6 font-medium">Metodologias TMA, NPS e RCA aplicada à operação de campo.</p>
+                      <div className="flex items-center gap-4 text-[10px] font-black text-zinc-400 uppercase tracking-widest">
+                        <span>24h Dedicação</span>
+                        <span className="text-zinc-800">•</span>
+                        <span className="text-emerald-400">88% Performance</span>
                       </div>
                     </div>
 
-                    <div className="p-6 rounded-2xl bg-white/5 border border-white/10 opacity-60 grayscale-[50%]">
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center">
-                          <ShieldCheck size={24} className="text-zinc-500" />
+                    <div className="p-8 rounded-2xl bg-white/[0.01] border border-dashed border-white/10 opacity-40">
+                      <div className="flex justify-between items-start mb-6">
+                        <div className="w-14 h-14 rounded-2xl bg-zinc-900 flex items-center justify-center text-zinc-700">
+                          <ShieldCheck size={28} />
                         </div>
-                        <span className="tag bg-zinc-800 text-zinc-500">BLOQUEADO</span>
+                        <span className="tag bg-zinc-900 text-zinc-600">Bloqueado</span>
                       </div>
-                      <h5 className="font-bold text-lg mb-2 tracking-tight">Módulo 4: Simulações Práticas</h5>
-                      <p className="text-sm text-zinc-600 mb-4 font-medium leading-relaxed">Cenários avançados de diagnóstico, checklists digitais e novas tecnologias FTTH.</p>
-                      <p className="text-[10px] font-bold text-purple-500/50 uppercase tracking-widest">Início previsto: Setembro 2025</p>
+                      <h5 className="text-xl font-black mb-2 tracking-tight text-zinc-600">Simulações Práticas</h5>
+                      <p className="text-sm text-zinc-700 font-medium tracking-tight">Cenários avançados de diagnóstico e novas tecnologias FTTH.</p>
+                      <p className="mt-6 text-[10px] font-black text-purple-900 uppercase tracking-widest">Liberação em: Agosto 2025</p>
                     </div>
                   </div>
                 </div>
@@ -671,6 +796,6 @@ const App = () => {
       </main>
     </div>
   );
-}
+};
 
 export default App;
