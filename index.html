@@ -1,16 +1,1537 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>S&OP System - V.tal</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V.tal — Sistema de Gestão S&OP</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230A0B0D'/%3E%3Cpath d='M32 6 L54 15 L54 36 C54 46 32 56 32 56 C32 56 10 46 10 36 L10 15 Z' fill='none' stroke='%23C8FF00' stroke-width='2'/%3E%3Cpath d='M22 23 L32 43 L42 23' stroke='%23C8FF00' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Ccircle cx='32' cy='17' r='2.5' fill='%23C8FF00' opacity='0.7'/%3E%3C/svg%3E">
+<style>
+[data-theme="dark"]{--bg0:#09090C;--bg1:#0F1015;--bg2:#14161D;--bg3:#1A1D26;--bgc:#11131A;--bdr:rgba(255,255,255,0.07);--bda:rgba(200,255,0,0.28);--t1:#ECEEF2;--t2:#8A94A8;--t3:#555E70;--tinv:#0A0B0D;--sh:rgba(0,0,0,0.5);--vy:#C8FF00;--vyd:rgba(200,255,0,0.1)}
+[data-theme="light"]{--bg0:#F2F3F6;--bg1:#FFFFFF;--bg2:#EEF0F4;--bg3:#E4E7ED;--bgc:#FFFFFF;--bdr:rgba(0,0,0,0.08);--bda:rgba(80,140,0,0.35);--t1:#1A1D24;--t2:#525E70;--t3:#9098A8;--tinv:#fff;--sh:rgba(0,0,0,0.1);--vy:#5CA000;--vyd:rgba(92,160,0,0.1)}
+:root{--green:#00C96A;--red:#FF3A55;--orange:#F59E0B;--blue:#3D82F5;--purple:#8B5CF6;--r:10px;--rs:7px;--rx:5px}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;font-family:'Instrument Sans',sans-serif;font-size:14px;background:var(--bg0);color:var(--t1);overflow:hidden}
+.page{display:none;width:100%;height:100vh;overflow:hidden}
+.page.on{display:flex}
+
+/* LANDING */
+#pl{flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.lbg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 20% 50%,rgba(200,255,0,0.04),transparent 70%),radial-gradient(ellipse 40% 60% at 80% 30%,rgba(61,130,245,0.04),transparent 60%);pointer-events:none}
+.lgrid{position:absolute;inset:0;background-image:linear-gradient(var(--bdr) 1px,transparent 1px),linear-gradient(90deg,var(--bdr) 1px,transparent 1px);background-size:48px 48px;pointer-events:none}
+.lc{position:relative;z-index:2;text-align:center;max-width:560px;padding:32px;animation:fu .6s ease forwards}
+.ltitle{font-family:'Syne',sans-serif;font-weight:800;font-size:32px;line-height:1.1;margin-bottom:8px}
+.ltitle span{color:var(--vy)}
+.lsub{font-size:13.5px;color:var(--t2);line-height:1.6;margin-bottom:24px}
+.lbadges{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:24px}
+.lbadge{background:var(--bg3);border:1px solid var(--bdr);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--t2)}
+.lstats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px}
+.lstat{background:var(--bgc);border:1px solid var(--bdr);border-radius:var(--r);padding:14px 10px}
+.lsval{font-family:'Syne',sans-serif;font-weight:700;font-size:20px;color:var(--vy);line-height:1;margin-bottom:3px}
+.lslbl{font-size:11px;color:var(--t3)}
+.btnl{background:var(--vy);color:#000;border:none;border-radius:var(--rs);padding:13px 32px;font-family:'Syne',sans-serif;font-weight:700;font-size:13.5px;cursor:pointer;transition:all .2s;letter-spacing:.02em}
+.btnl:hover{opacity:.9;transform:translateY(-1px)}
+.lfooter{position:absolute;bottom:16px;font-size:11px;color:var(--t3)}
+
+/* LOGIN */
+#plo{background:var(--bg0);align-items:stretch}
+.lo-l{flex:1;background:var(--bgc);border-right:1px solid var(--bdr);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;position:relative;overflow:hidden}
+.lo-lbg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 100%,var(--vyd),transparent 60%);pointer-events:none}
+.lo-lgrid{position:absolute;inset:0;background-image:linear-gradient(var(--bdr) 1px,transparent 1px),linear-gradient(90deg,var(--bdr) 1px,transparent 1px);background-size:36px 36px;pointer-events:none}
+.lo-brand{position:relative;z-index:2;text-align:center;max-width:340px}
+.lo-btitle{font-family:'Syne',sans-serif;font-weight:800;font-size:24px;margin-bottom:5px}
+.lo-btitle span{color:var(--vy)}
+.lo-bsub{font-size:12.5px;color:var(--t2);line-height:1.6;margin-bottom:22px}
+.lo-feats{display:flex;flex-direction:column;gap:8px;text-align:left}
+.lo-feat{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--rs);padding:9px 13px;font-size:12px;color:var(--t2)}
+.lo-r{width:420px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 36px;position:relative}
+.lo-ftitle{font-family:'Syne',sans-serif;font-weight:700;font-size:20px;margin-bottom:3px;align-self:flex-start}
+.lo-fsub{font-size:12.5px;color:var(--t2);margin-bottom:22px;align-self:flex-start}
+.fg{width:100%;margin-bottom:12px}
+.fl{display:block;font-size:11px;font-weight:700;color:var(--t2);margin-bottom:5px;letter-spacing:.05em;text-transform:uppercase}
+.fi{width:100%;background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--rs);padding:10px 13px;font-size:13.5px;color:var(--t1);font-family:inherit;outline:none;transition:all .18s}
+.fi:focus{border-color:var(--bda)}
+.fi::placeholder{color:var(--t3)}
+.frow{display:flex;gap:8px;align-items:center;margin-bottom:16px}
+.fcheck{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer}
+.fcheck input{accent-color:var(--vy)}
+.flink{font-size:11.5px;color:var(--vy);cursor:pointer;margin-left:auto}
+.flink:hover{text-decoration:underline}
+.btnlo{width:100%;background:var(--vy);color:#000;border:none;border-radius:var(--rs);padding:11px;font-family:'Syne',sans-serif;font-weight:700;font-size:13.5px;cursor:pointer;transition:all .18s}
+.btnlo:hover{opacity:.9}
+.lo-div{width:100%;display:flex;align-items:center;gap:10px;margin:14px 0;font-size:11.5px;color:var(--t3)}
+.lo-div::before,.lo-div::after{content:'';flex:1;height:1px;background:var(--bdr)}
+.lo-roles{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.rbtn{background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--rs);padding:8px 11px;font-size:11.5px;color:var(--t2);cursor:pointer;text-align:left;transition:all .18s;font-family:inherit}
+.rbtn:hover{border-color:var(--bda);color:var(--vy)}
+.rbtn .rt{font-weight:600;font-size:12px;color:var(--t1);display:block;margin-bottom:1px}
+.lo-corner{position:absolute;top:16px;right:16px}
+.lo-back{position:absolute;top:16px;left:16px;font-size:11.5px;color:var(--t3);cursor:pointer;display:flex;align-items:center;gap:4px}
+.lo-back:hover{color:var(--t1)}
+
+/* APP */
+#pa{flex-direction:row;overflow:hidden}
+.sb{width:60px;background:var(--bg1);border-right:1px solid var(--bdr);display:flex;flex-direction:column;align-items:center;padding:14px 0;flex-shrink:0;transition:width .26s cubic-bezier(.4,0,.2,1);overflow:hidden;z-index:10}
+.sb:hover{width:200px}
+.sb:hover .nl{opacity:1;max-width:120px}
+.sb:hover .lname{opacity:1;max-width:120px}
+.lwrap{display:flex;align-items:center;padding:0 12px;width:100%;margin-bottom:14px;gap:8px}
+.lcsm{width:32px;height:32px;flex-shrink:0}
+.lname{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--vy);opacity:0;max-width:0;overflow:hidden;white-space:nowrap;transition:opacity .18s,max-width .26s}
+.nsep{width:100%;height:1px;background:var(--bdr);margin:6px 0}
+.ni{display:flex;align-items:center;width:100%;padding:8px 14px;cursor:pointer;color:var(--t2);transition:all .16s;position:relative;border:none;background:none;font-family:inherit;gap:8px}
+.ni:hover{color:var(--t1);background:var(--vyd)}
+.ni.on{color:var(--vy)}
+.ni.on::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:2px;background:var(--vy);border-radius:0 2px 2px 0}
+.nic{font-size:15px;flex-shrink:0;width:32px;text-align:center}
+.nl{font-size:12.5px;font-weight:500;white-space:nowrap;opacity:0;max-width:0;overflow:hidden;transition:opacity .16s,max-width .26s}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.tb{height:54px;background:var(--bg1);border-bottom:1px solid var(--bdr);display:flex;align-items:center;padding:0 18px;gap:8px;flex-shrink:0}
+.tbtitle{font-family:'Syne',sans-serif;font-weight:700;font-size:13.5px;flex:1}
+.fsel{background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--rx);padding:4px 8px;font-size:12px;color:var(--t1);font-family:inherit;cursor:pointer;outline:none;transition:all .16s}
+.fsel:hover{border-color:var(--bda)}
+.ubadge{background:var(--vyd);border:1px solid var(--bda);border-radius:var(--rx);padding:4px 9px;font-family:'DM Mono',monospace;font-size:10.5px;color:var(--vy);display:flex;align-items:center;gap:4px;flex-shrink:0}
+.ttog{background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--rx);padding:5px 8px;cursor:pointer;font-size:12.5px;transition:all .18s;color:var(--t2);flex-shrink:0}
+.ttog:hover{color:var(--t1);border-color:var(--bda)}
+.uchip{display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--rx);padding:4px 10px;font-size:11.5px;color:var(--t2);cursor:pointer;flex-shrink:0;transition:all .16s}
+.uchip:hover{border-color:var(--bda);color:var(--t1)}
+.uav{width:22px;height:22px;border-radius:50%;background:var(--vyd);border:1px solid var(--bda);display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:700;color:var(--vy)}
+.cnt{flex:1;overflow-y:auto;overflow-x:hidden;padding:18px 20px}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:2px}
+.panel{display:none}
+.panel.on{display:block}
+.st{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:10px;margin-top:22px}
+.st:first-child{margin-top:0}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.gm{display:grid;grid-template-columns:2fr 1fr;gap:9px}
+.gw{display:grid;grid-template-columns:3fr 2fr;gap:9px}
+.card{background:var(--bgc);border:1px solid var(--bdr);border-radius:var(--r);padding:14px 16px;transition:border-color .16s}
+.card:hover{border-color:rgba(255,255,255,0.1)}
+[data-theme="light"] .card:hover{border-color:rgba(0,0,0,0.12)}
+.card.hl{border-color:var(--bda);position:relative;overflow:hidden}
+.card.hl::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--vy)}
+.kpi{background:var(--bgc);border:1px solid var(--bdr);border-radius:var(--r);padding:13px 15px;cursor:pointer;transition:all .16s;position:relative;overflow:hidden}
+.kpi:hover{transform:translateY(-1px);border-color:rgba(255,255,255,0.1)}
+[data-theme="light"] .kpi:hover{border-color:rgba(0,0,0,0.12)}
+.kpi.ka{border-color:rgba(255,58,85,.22)}
+.kpi.ka::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top right,rgba(255,58,85,.04),transparent 70%);pointer-events:none}
+.kpi.ko{border-color:rgba(0,201,106,.18)}
+.kpi.ko::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top right,rgba(0,201,106,.04),transparent 70%);pointer-events:none}
+.klbl{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);margin-bottom:5px}
+.kv{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;line-height:1;margin-bottom:4px}
+.kv.sm{font-size:18px}
+.kv.lg{font-size:26px}
+.ksub{font-size:11px;color:var(--t3);display:flex;align-items:center;gap:4px}
+.kmeta{position:absolute;top:10px;right:10px;font-family:'DM Mono',monospace;font-size:9px;color:var(--t3)}
+.kpts{position:absolute;bottom:10px;right:10px;font-family:'DM Mono',monospace;font-size:9px;background:var(--bg3);border:1px solid var(--bdr);border-radius:3px;padding:2px 6px;color:var(--t2)}
+.kbar{margin-top:8px;height:2px;background:var(--bg3);border-radius:1px;overflow:hidden}
+.kbf{height:100%;border-radius:1px;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.tr{display:inline-flex;align-items:center;gap:2px;font-size:10.5px;font-weight:600;padding:1px 6px;border-radius:3px}
+.tu{color:var(--green);background:rgba(0,201,106,.1)}
+.td{color:var(--red);background:rgba(255,58,85,.1)}
+.tn{color:var(--orange);background:rgba(245,158,11,.1)}
+.tag{display:inline-block;padding:2px 7px;border-radius:3px;font-size:10.5px;font-weight:700}
+.tg{background:rgba(0,201,106,.1);color:var(--green)}
+.ta{background:rgba(255,58,85,.1);color:var(--red)}
+.to{background:rgba(245,158,11,.1);color:var(--orange)}
+.tb2{background:rgba(61,130,245,.1);color:var(--blue)}
+.ty2{background:var(--vyd);color:var(--vy)}
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{text-align:left;padding:6px 9px;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);border-bottom:1px solid var(--bdr)}
+.tbl td{padding:8px 9px;border-bottom:1px solid rgba(255,255,255,.03);color:var(--t2)}
+[data-theme="light"] .tbl td{border-bottom-color:rgba(0,0,0,.04)}
+.tbl tr:hover td{background:var(--bg2);color:var(--t1)}
+.tbl td.mo{font-family:'DM Mono',monospace;font-size:11.5px}
+.tbl td.b{font-weight:600;color:var(--t1)}
+.pr{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.prl{font-size:11.5px;color:var(--t2);width:110px;flex-shrink:0}
+.prb{flex:1;height:3px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.prf{height:100%;border-radius:2px}
+.prv{font-family:'DM Mono',monospace;font-size:11px;color:var(--t1);width:42px;text-align:right}
+.mr{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03)}
+[data-theme="light"] .mr{border-bottom-color:rgba(0,0,0,.04)}
+.mrn{font-size:11.5px;color:var(--t2);width:110px;flex-shrink:0}
+.mrb{flex:1;height:3px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.mrf{height:100%;border-radius:2px;background:var(--vy)}
+.mrv{font-family:'DM Mono',monospace;font-size:11px;color:var(--t1)}
+.mrp{font-family:'DM Mono',monospace;font-size:10.5px;color:var(--t3);width:36px;text-align:right}
+.tabs{display:flex;gap:1px;margin-bottom:14px;border-bottom:1px solid var(--bdr)}
+.tabb{padding:6px 14px;font-size:12px;font-weight:500;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .16s;background:none;border-top:none;border-left:none;border-right:none;font-family:inherit}
+.tabb:hover{color:var(--t1)}
+.tabb.on{color:var(--vy);border-bottom-color:var(--vy)}
+.sring{width:70px;height:70px;position:relative;flex-shrink:0}
+.sring svg{transform:rotate(-90deg)}
+.sringv{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:16px}
+.tlogo{width:28px;height:28px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:10px;font-family:'Syne',sans-serif;flex-shrink:0}
+.astrip{background:rgba(255,58,85,.06);border:1px solid rgba(255,58,85,.16);border-radius:var(--rs);padding:9px 12px;display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:12px}
+.istrip{background:var(--vyd);border:1px solid var(--bda);border-radius:var(--rs);padding:9px 12px;display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:12px}
+.fx{display:flex;align-items:center;gap:8px}
+.fxb{display:flex;align-items:center;justify-content:space-between}
+.ct{font-size:11.5px;font-weight:600;color:var(--t2);margin-bottom:10px}
+.ct span{color:var(--t1)}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.dg{background:var(--green)}
+.dr{background:var(--red)}
+.do_{background:var(--orange)}
+.dy{background:var(--vy)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.live{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;display:inline-block}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shimmer{from{background-position:-200% center}to{background-position:200% center}}
+.an{animation:fu .3s ease forwards;opacity:0}
+.an:nth-child(1){animation-delay:.04s}.an:nth-child(2){animation-delay:.08s}.an:nth-child(3){animation-delay:.12s}.an:nth-child(4){animation-delay:.16s}.an:nth-child(5){animation-delay:.20s}.an:nth-child(6){animation-delay:.24s}.an:nth-child(7){animation-delay:.28s}.an:nth-child(8){animation-delay:.32s}
+.shim{background:linear-gradient(90deg,var(--vy) 0%,#fff 50%,var(--vy) 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 3s linear infinite}
+.ftbar{padding:9px 20px;border-top:1px solid var(--bdr);display:flex;align-items:center;gap:8px;font-size:10.5px;color:var(--t3);flex-shrink:0}
+
+/* EXPORT BTN */
+.ebtn{display:inline-flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--rx);padding:5px 11px;font-size:11.5px;color:var(--t2);cursor:pointer;font-family:inherit;transition:all .16s}
+.ebtn:hover{border-color:var(--bda);color:var(--vy)}
+.ebtn-grp{display:flex;gap:5px;flex-wrap:wrap}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-overlay.on{display:flex}
+.modal{background:var(--bg1);border:1px solid var(--bdr);border-radius:12px;padding:24px;min-width:340px;max-width:500px;animation:fu .2s ease}
+.modal-title{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;margin-bottom:4px}
+.modal-sub{font-size:12px;color:var(--t3);margin-bottom:18px}
+.modal-close{float:right;cursor:pointer;color:var(--t3);font-size:16px;margin-top:-2px}
+.modal-close:hover{color:var(--t1)}
+.mform-row{margin-bottom:12px}
+.mform-label{font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;display:block}
+.mform-input{width:100%;background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--rs);padding:9px 12px;font-size:13px;color:var(--t1);font-family:inherit;outline:none;transition:all .16s}
+.mform-input:focus{border-color:var(--bda)}
+.mform-select{width:100%;background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--rs);padding:9px 12px;font-size:13px;color:var(--t1);font-family:inherit;outline:none}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+.btn-cancel{background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--rs);padding:8px 16px;font-size:12.5px;color:var(--t2);cursor:pointer;font-family:inherit;transition:all .16s}
+.btn-cancel:hover{color:var(--t1)}
+.btn-primary{background:var(--vy);border:none;border-radius:var(--rs);padding:8px 18px;font-size:12.5px;font-weight:700;color:#000;cursor:pointer;font-family:'Syne',sans-serif;transition:all .16s}
+.btn-primary:hover{opacity:.9}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--bg1);border:1px solid var(--bda);border-radius:var(--rs);padding:12px 18px;font-size:12.5px;color:var(--t1);z-index:2000;display:none;align-items:center;gap:8px;box-shadow:0 4px 20px var(--sh);animation:fu .2s ease}
+.toast.on{display:flex}
+.toast-icon{width:7px;height:7px;border-radius:50%;background:var(--vy);flex-shrink:0}
+
+/* SORT arrows */
+.tbl th.sortable{cursor:pointer;user-select:none}
+.tbl th.sortable:hover{color:var(--t1)}
+.tbl th.sortable::after{content:' ↕';opacity:.4;font-size:9px}
+.tbl th.sort-asc::after{content:' ↑';opacity:1;color:var(--vy)}
+.tbl th.sort-desc::after{content:' ↓';opacity:1;color:var(--vy)}
+
+/* SEARCH */
+.search-box{background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--rx);padding:5px 10px;font-size:12px;color:var(--t1);font-family:inherit;outline:none;width:160px;transition:all .18s}
+.search-box:focus{border-color:var(--bda);width:200px}
+.search-box::placeholder{color:var(--t3)}
+
+/* PAGINATION */
+.pag{display:flex;align-items:center;gap:4px;margin-top:10px}
+.pag-btn{background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--rx);padding:4px 10px;font-size:11.5px;color:var(--t2);cursor:pointer;font-family:inherit;transition:all .16s}
+.pag-btn:hover,.pag-btn.on{background:var(--vy);color:#000;border-color:var(--vy)}
+.pag-info{font-size:11px;color:var(--t3);margin-left:8px}
+
+/* PROGRESS DETAIL */
+.detail-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--bdr);font-size:12px}
+.detail-row:last-child{border:none}
+.detail-key{color:var(--t2)}
+.detail-val{font-family:'DM Mono',monospace;color:var(--t1);font-size:11.5px}
+
+@media(max-width:1100px){.g4{grid-template-columns:repeat(2,1fr)}.gm,.gw{grid-template-columns:1fr}}
+@media(max-width:768px){.g3,.g2{grid-template-columns:1fr}.cnt{padding:12px}.lo-l{display:none}.lo-r{width:100%}}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><div class="toast-icon"></div><span id="toast-msg">Ação realizada com sucesso</span></div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-tenant">
+  <div class="modal">
+    <span class="modal-close" onclick="closeModal('modal-tenant')">✕</span>
+    <div class="modal-title">Novo Tenant</div>
+    <div class="modal-sub">Cadastrar nova empresa parceira</div>
+    <div class="mform-row"><label class="mform-label">Nome da Empresa</label><input class="mform-input" id="m-tenant-nome" placeholder="Ex: Claro S.A."></div>
+    <div class="mform-row"><label class="mform-label">CNPJ</label><input class="mform-input" id="m-tenant-cnpj" placeholder="00.000.000/0001-00"></div>
+    <div class="mform-row"><label class="mform-label">PSR Responsável</label>
+      <select class="mform-select"><option>TEL Telecom</option><option>Ability</option><option>RS Telecom</option><option>Telemont</option></select>
+    </div>
+    <div class="mform-row"><label class="mform-label">Regional</label>
+      <select class="mform-select"><option>SUDESTE</option><option>NORDESTE</option><option>SUL</option><option>NORTE</option></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modal-tenant')">Cancelar</button>
+      <button class="btn-primary" onclick="saveTenant()">Cadastrar Tenant</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-action">
+  <div class="modal">
+    <span class="modal-close" onclick="closeModal('modal-action')">✕</span>
+    <div class="modal-title">Nova Iniciativa</div>
+    <div class="modal-sub">Adicionar ação ao plano S&OP</div>
+    <div class="mform-row"><label class="mform-label">Descrição</label><input class="mform-input" id="m-action-desc" placeholder="Descreva a iniciativa"></div>
+    <div class="mform-row"><label class="mform-label">Impacto</label>
+      <select class="mform-select" id="m-action-imp"><option>Crítico</option><option>Alto</option><option selected>Médio</option><option>Baixo</option></select>
+    </div>
+    <div class="mform-row"><label class="mform-label">Responsável</label><input class="mform-input" id="m-action-resp" placeholder="Time ou pessoa responsável"></div>
+    <div class="mform-row"><label class="mform-label">Prazo</label><input class="mform-input" id="m-action-prazo" type="date"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modal-action')">Cancelar</button>
+      <button class="btn-primary" onclick="saveAction()">Adicionar Iniciativa</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-os">
+  <div class="modal">
+    <span class="modal-close" onclick="closeModal('modal-os')">✕</span>
+    <div class="modal-title">Nova Ordem de Serviço</div>
+    <div class="modal-sub">Registrar OS manualmente</div>
+    <div class="mform-row"><label class="mform-label">Tipo</label>
+      <select class="mform-select" id="m-os-tipo"><option>Instalação FTTH</option><option>Reparo FTTH</option><option>Manutenção</option><option>Backbone/GCE</option></select>
+    </div>
+    <div class="mform-row"><label class="mform-label">Município</label>
+      <select class="mform-select" id="m-os-mun"><option>Rio de Janeiro</option><option>Duque de Caxias</option><option>Belford Roxo</option><option>Nilópolis</option><option>Niterói</option><option>Nova Iguaçu</option><option>São Gonçalo</option><option>Mesquita</option><option>Queimados</option></select>
+    </div>
+    <div class="mform-row"><label class="mform-label">Tenant</label>
+      <select class="mform-select" id="m-os-ten"><option value="TIM">TIM S.A.</option><option value="NIO">NIO</option></select>
+    </div>
+    <div class="mform-row"><label class="mform-label">PSR</label>
+      <select class="mform-select" id="m-os-psr"><option>TEL Telecom</option><option>Ability</option><option>RS Telecom</option><option>Telemont</option></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modal-os')">Cancelar</button>
+      <button class="btn-primary" onclick="saveOS()">Registrar OS</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-perfil">
+  <div class="modal">
+    <span class="modal-close" onclick="closeModal('modal-perfil')">✕</span>
+    <div class="modal-title" id="perfil-title">Gerente S&OP</div>
+    <div class="modal-sub">Informações do usuário logado</div>
+    <div class="detail-row"><div class="detail-key">E-mail</div><div class="detail-val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="660103140308050f0748150916261012070a4805090b480414">[email&#160;protected]</a></div></div>
+    <div class="detail-row"><div class="detail-key">Perfil</div><div class="detail-val" id="perfil-role">Gerente S&OP</div></div>
+    <div class="detail-row"><div class="detail-key">Regional</div><div class="detail-val">SUDESTE</div></div>
+    <div class="detail-row"><div class="detail-key">Último acesso</div><div class="detail-val">23/07/2025 16:33</div></div>
+    <div class="detail-row"><div class="detail-key">Versão sistema</div><div class="detail-val">v1.0</div></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modal-perfil')">Fechar</button>
+      <button class="btn-primary" onclick="showPage('pl');closeModal('modal-perfil')">Sair do Sistema</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-forgot">
+  <div class="modal">
+    <span class="modal-close" onclick="closeModal('modal-forgot')">✕</span>
+    <div class="modal-title">Recuperar Senha</div>
+    <div class="modal-sub">Informe seu e-mail corporativo para receber o link</div>
+    <div class="mform-row"><label class="mform-label">E-mail corporativo</label><input class="mform-input" placeholder="nome@vtal.com.br" id="forgot-email"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modal-forgot')">Cancelar</button>
+      <button class="btn-primary" onclick="sendForgot()">Enviar Link</button>
+    </div>
+  </div>
+</div>
+
+<!-- LANDING -->
+<div class="page on" id="pl">
+  <div class="lbg"></div><div class="lgrid"></div>
+  <div style="position:absolute;top:16px;right:16px;z-index:10">
+    <button class="ttog" onclick="toggleTheme()" id="ttog-l">🌙</button>
+  </div>
+  <div class="lc">
+    <div style="margin:0 auto 20px;width:72px">
+      <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C8FF00"/><stop offset="1" stop-color="#88CC00"/></linearGradient><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C8FF00" stop-opacity=".15"/><stop offset="1" stop-color="#C8FF00" stop-opacity=".03"/></linearGradient></defs>
+        <path d="M40 6L68 18L68 44C68 58 40 74 40 74C40 74 12 58 12 44L12 18Z" fill="url(#g2)" stroke="url(#g1)" stroke-width="1.5"/>
+        <path d="M40 12L62 22L62 43C62 54 40 68 40 68C40 68 18 54 18 43L18 22Z" fill="none" stroke="url(#g1)" stroke-width=".7" stroke-dasharray="2 3" opacity=".5"/>
+        <path d="M27 28L40 52L53 28" stroke="url(#g1)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <circle cx="40" cy="21" r="3" fill="#C8FF00" opacity=".6"/>
+        <rect x="7" y="37" width="5" height="5" rx="1" fill="#C8FF00" opacity=".3" transform="rotate(45 9.5 39.5)"/>
+        <rect x="68" y="37" width="5" height="5" rx="1" fill="#C8FF00" opacity=".3" transform="rotate(45 70.5 39.5)"/>
+      </svg>
+    </div>
+    <div class="ltitle">V.tal <span>S&amp;OP</span> System</div>
+    <div class="lsub">Plataforma integrada de Sales &amp; Operations Planning para gestão de infraestrutura de Fibra Óptica, técnicos FTTH, PSRs e indicadores VIP — nível nacional.</div>
+    <div class="lbadges">
+      <span class="lbadge">🔗 FTTH</span><span class="lbadge">🏗️ Backbone FO</span><span class="lbadge">📊 Indicadores VIP</span><span class="lbadge">🌎 Nacional</span><span class="lbadge">⚡ Tempo Real</span>
+    </div>
+    <div class="lstats">
+      <div class="lstat"><div class="lsval">10K+</div><div class="lslbl">OS por Dia</div></div>
+      <div class="lstat"><div class="lsval">4.000</div><div class="lslbl">Técnicos FTTH</div></div>
+      <div class="lstat"><div class="lsval">50/50</div><div class="lslbl">Score VIP</div></div>
+    </div>
+    <button class="btnl" onclick="showPage('plo')">Acessar o Sistema →</button>
+  </div>
+  <div class="lfooter">© 2025 V.tal — Gerência de S&amp;OP / Sudeste</div>
+</div>
+
+<!-- LOGIN -->
+<div class="page" id="plo">
+  <div class="lo-l">
+    <div class="lo-lbg"></div><div class="lo-lgrid"></div>
+    <div class="lo-brand">
+      <div style="margin:0 auto 16px;width:64px">
+        <svg viewBox="0 0 80 80" fill="none">
+          <defs><linearGradient id="lg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C8FF00"/><stop offset="1" stop-color="#88CC00"/></linearGradient><linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C8FF00" stop-opacity=".15"/><stop offset="1" stop-color="#C8FF00" stop-opacity=".03"/></linearGradient></defs>
+          <path d="M40 6L68 18L68 44C68 58 40 74 40 74C40 74 12 58 12 44L12 18Z" fill="url(#lg2)" stroke="url(#lg1)" stroke-width="1.5"/>
+          <path d="M27 28L40 52L53 28" stroke="url(#lg1)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <circle cx="40" cy="21" r="3" fill="#C8FF00" opacity=".6"/>
+        </svg>
+      </div>
+      <div class="lo-btitle">V.tal <span>S&amp;OP</span></div>
+      <div class="lo-bsub">Sistema de Gestão de Sales &amp; Operations Planning para monitoramento de desempenho operacional em Fibra Óptica.</div>
+      <div class="lo-feats">
+        <div class="lo-feat"><span>⬡</span> Indicadores VIP em tempo real</div>
+        <div class="lo-feat"><span>◎</span> Gestão de 4.000 técnicos e 12 PSRs</div>
+        <div class="lo-feat"><span>◈</span> 10.000+ OS/dia monitoradas</div>
+        <div class="lo-feat"><span>◔</span> Visão por município, regional e tenant</div>
+        <div class="lo-feat"><span>⬢</span> Ciclo completo S&amp;OP com plano de ação</div>
+      </div>
+    </div>
+  </div>
+  <div class="lo-r">
+    <div class="lo-corner"><button class="ttog" onclick="toggleTheme()" id="ttog-lo">🌙</button></div>
+    <div class="lo-back" onclick="showPage('pl')">← Voltar</div>
+    <div class="lo-ftitle">Acesso ao Sistema</div>
+    <div class="lo-fsub">Entre com suas credenciais V.tal</div>
+    <div class="fg"><label class="fl">E-mail corporativo</label><input class="fi" type="email" placeholder="nome@vtal.com.br" id="lemail" value="gerencia.sop@vtal.com.br"></div>
+    <div class="fg"><label class="fl">Senha</label><input class="fi" type="password" placeholder="••••••••" id="lpass" value="12345678"></div>
+    <div class="frow"><label class="fcheck"><input type="checkbox" checked> Manter conectado</label><a class="flink" onclick="openModal('modal-forgot')">Esqueci a senha</a></div>
+    <button class="btnlo" onclick="doLogin()">Entrar no Sistema</button>
+    <div class="lo-div">ou acesse com perfil demo</div>
+    <div class="lo-roles">
+      <button class="rbtn" onclick="loginAs('Gerente S&OP')"><span class="rt">Gerente S&amp;OP</span>Acesso total</button>
+      <button class="rbtn" onclick="loginAs('Analista')"><span class="rt">Analista</span>Visualização</button>
+      <button class="rbtn" onclick="loginAs('Supervisor PSR')"><span class="rt">Supervisor PSR</span>Técnicos/OS</button>
+      <button class="rbtn" onclick="loginAs('Executivo')"><span class="rt">Executivo</span>Dashboards</button>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="page" id="pa">
+  <nav class="sb">
+    <div class="lwrap">
+      <svg class="lcsm" viewBox="0 0 80 80" fill="none">
+        <defs><linearGradient id="sg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C8FF00"/><stop offset="1" stop-color="#88CC00"/></linearGradient><linearGradient id="sg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C8FF00" stop-opacity=".15"/><stop offset="1" stop-color="#C8FF00" stop-opacity=".03"/></linearGradient></defs>
+        <path d="M40 6L68 18L68 44C68 58 40 74 40 74C40 74 12 58 12 44L12 18Z" fill="url(#sg2)" stroke="url(#sg1)" stroke-width="1.5"/>
+        <path d="M27 28L40 52L53 28" stroke="url(#sg1)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <circle cx="40" cy="21" r="3" fill="#C8FF00" opacity=".6"/>
+      </svg>
+      <span class="lname">V.tal S&amp;OP</span>
+    </div>
+    <div class="nsep"></div>
+    <button class="ni on" onclick="showPanel('ov',this)"><span class="nic">⬡</span><span class="nl">Visão Geral</span></button>
+    <button class="ni" onclick="showPanel('ind',this)"><span class="nic">◎</span><span class="nl">Indicadores VIP</span></button>
+    <button class="ni" onclick="showPanel('ops',this)"><span class="nic">◈</span><span class="nl">Operações OS</span></button>
+    <button class="ni" onclick="showPanel('tec',this)"><span class="nic">◐</span><span class="nl">Técnicos &amp; PSR</span></button>
+    <button class="ni" onclick="showPanel('ten',this)"><span class="nic">◑</span><span class="nl">Tenants</span></button>
+    <button class="ni" onclick="showPanel('mun',this)"><span class="nic">◔</span><span class="nl">Municípios</span></button>
+    <button class="ni" onclick="showPanel('plt',this)"><span class="nic">◕</span><span class="nl">Reparo/Planta</span></button>
+    <button class="ni" onclick="showPanel('sop',this)"><span class="nic">⬢</span><span class="nl">S&amp;OP Planning</span></button>
+    <div style="flex:1"></div>
+    <div class="nsep"></div>
+    <button class="ni" onclick="showPanel('cfg',this)"><span class="nic">⊙</span><span class="nl">Configurações</span></button>
+    <button class="ni" onclick="confirmLogout()"><span class="nic">⟵</span><span class="nl">Sair</span></button>
+  </nav>
+
+  <div class="main">
+    <div class="tb">
+      <div class="tbtitle" id="ptitle">Visão Geral — S&amp;OP</div>
+      <select class="fsel" id="fsel-reg" onchange="applyFilters()"><option>SUDESTE</option><option>NORTE</option><option>NORDESTE</option><option>SUL</option></select>
+      <select class="fsel" id="fsel-uf" onchange="applyFilters()"><option>RJ</option><option>SP</option><option>MG</option></select>
+      <select class="fsel" id="fsel-mes" onchange="applyFilters()"><option>ATUAL Jul/25</option><option>Jun/25</option><option>Mai/25</option><option>Abr/25</option></select>
+      <select class="fsel" id="fsel-ten" onchange="applyFilters()"><option>Todos Tenants</option><option>TIM</option><option>NIO</option></select>
+      <div class="ubadge"><span class="live"></span><span id="relogio">23/07 16:33</span></div>
+      <button class="ttog" onclick="toggleTheme()" id="ttog-app">🌙</button>
+      <div style="position:relative">
+        <button class="ttog" id="notif-btn" onclick="toggleNotif()" title="Notificações" style="position:relative">🔔<span id="notif-badge" style="position:absolute;top:-3px;right:-3px;background:var(--red);color:#fff;border-radius:50%;width:14px;height:14px;font-size:8px;display:flex;align-items:center;justify-content:center;font-weight:700">2</span></button>
+        <div id="notif-panel" style="display:none;position:absolute;top:34px;right:0;width:300px;background:var(--bg1);border:1px solid var(--bdr);border-radius:10px;box-shadow:0 8px 32px var(--sh);z-index:200;max-height:400px;overflow-y:auto"></div>
+      </div>
+      <div class="uchip" onclick="openModal('modal-perfil')"><div class="uav" id="uav">GS</div><span id="uname">Gerente S&amp;OP</span></div>
+    </div>
+
+    <div class="cnt">
+
+      <!-- OVERVIEW -->
+      <div class="panel on" id="pov">
+        <div class="astrip"><span>⚠</span><span><strong style="color:var(--red)">Atenção:</strong> Infância 30D acima do limite em RJ. Repetida 30D próxima ao limite. <strong>10.247 OS</strong> abertas hoje.</span>
+          <button class="ebtn" style="margin-left:auto;flex-shrink:0" onclick="exportPDF('Visão Geral')">⬇ Exportar PDF</button>
+        </div>
+        <div class="st">KPIs Nacionais — Hoje</div>
+        <div class="g4">
+          <div class="kpi an" onclick="showPanel('ops',document.querySelector('.ni:nth-child(4)'))"><div class="klbl">OS Abertas / Dia</div><div class="kv lg shim" id="kos">10.247</div><div class="ksub"><span class="tr tu">▲ +3,2%</span> vs ontem</div><div class="kbar"><div class="kbf" style="width:82%;background:var(--vy)"></div></div></div>
+          <div class="kpi ko an" onclick="showPanel('ind',document.querySelector('.ni:nth-child(5)'))"><div class="kmeta">VIP</div><div class="klbl">Score Total</div><div class="kv lg" style="color:var(--vy)">50/50</div><div class="ksub"><span class="tr tu">✓ Meta atingida</span></div><div class="kbar"><div class="kbf" style="width:100%;background:var(--green)"></div></div></div>
+          <div class="kpi an" onclick="showPanel('tec',document.querySelector('.ni:nth-child(7)'))"><div class="klbl">Técnicos Ativos</div><div class="kv lg">4.000</div><div class="ksub"><span class="tr tn">◉ 3.741</span> em campo</div><div class="kbar"><div class="kbf" style="width:93%;background:var(--blue)"></div></div></div>
+          <div class="kpi an" onclick="showPanel('tec',document.querySelector('.ni:nth-child(7)'))"><div class="klbl">PSRs Ativas</div><div class="kv lg">12</div><div class="ksub">TEL, Ability, RS, Telemont +8</div><div class="kbar"><div class="kbf" style="width:100%;background:var(--purple)"></div></div></div>
+        </div>
+        <div class="st">Indicadores VIP — Status</div>
+        <div class="g4">
+          <div class="kpi ka an" onclick="goToIndicador(0)"><div class="kpts">20 pts</div><div class="klbl">Infância 30 Dias</div><div class="kv sm" style="color:var(--red)">5,8%</div><div class="ksub"><div class="dot dr"></div>Lim:5% Meta:4%</div><div class="kbar"><div class="kbf" style="width:58%;background:var(--red)"></div></div></div>
+          <div class="kpi ko an" onclick="goToIndicador(1)"><div class="kpts">15 pts</div><div class="klbl">Instalação 96h</div><div class="kv sm" style="color:var(--green)">91,3%</div><div class="ksub"><div class="dot dg"></div>Lim:85% Meta:90%</div><div class="kbar"><div class="kbf" style="width:91%;background:var(--green)"></div></div></div>
+          <div class="kpi ko an" onclick="goToIndicador(3)"><div class="kpts">15 pts</div><div class="klbl">1ª Agenda Inst.</div><div class="kv sm" style="color:var(--green)">86,2%</div><div class="ksub"><div class="dot dg"></div>Lim:80% Meta:85%</div><div class="kbar"><div class="kbf" style="width:86%;background:var(--vy)"></div></div></div>
+          <div class="kpi ko an" onclick="goToIndicador(3)"><div class="kpts">10 pts</div><div class="klbl">1ª Agenda Rep.</div><div class="kv sm" style="color:var(--green)">84,7%</div><div class="ksub"><div class="dot dg"></div>Lim:80% Meta:85%</div><div class="kbar"><div class="kbf" style="width:85%;background:var(--vy)"></div></div></div>
+          <div class="kpi ka an" onclick="goToIndicador(2)"><div class="kpts">10 pts</div><div class="klbl">Reparo 24h</div><div class="kv sm" style="color:var(--orange)">71,4%</div><div class="ksub"><div class="dot do_"></div>Lim:70% Meta:75%</div><div class="kbar"><div class="kbf" style="width:71%;background:var(--orange)"></div></div></div>
+          <div class="kpi ko an" onclick="goToIndicador(5)"><div class="kpts">15 pts</div><div class="klbl">Reparo/Planta</div><div class="kv sm" style="color:var(--green)">1,82%</div><div class="ksub"><div class="dot dg"></div>Lim:2,5% Meta:2%</div><div class="kbar"><div class="kbf" style="width:91%;background:var(--green)"></div></div></div>
+          <div class="kpi ka an" onclick="goToIndicador(4)"><div class="kpts">15 pts</div><div class="klbl">Repetida 30 Dias</div><div class="kv sm" style="color:var(--orange)">9,4%</div><div class="ksub"><div class="dot do_"></div>Lim:10% Meta:9%</div><div class="kbar"><div class="kbf" style="width:94%;background:var(--orange)"></div></div></div>
+          <div class="kpi ko hl an"><div class="klbl">Score VIP Total</div><div class="kv lg" style="color:var(--vy)">50/50</div><div class="ksub">Consolidado mensal</div><div class="kbar" style="margin-top:8px"><div class="kbf" style="width:100%;background:var(--vy)"></div></div></div>
+        </div>
+        <div class="gm" style="margin-top:0">
+          <div class="card an">
+            <div class="fxb" style="margin-bottom:10px">
+              <div class="ct">OS por <span>Tenant</span></div>
+              <div class="ebtn-grp">
+                <button class="ebtn" onclick="exportCSV('tenants')">⬇ CSV</button>
+                <button class="ebtn" onclick="exportPDF('OS por Tenant')">⬇ PDF</button>
+              </div>
+            </div>
+            <table class="tbl"><thead><tr><th class="sortable" onclick="sortTable(this,'tab-tenant',0)">Tenant</th><th class="sortable" onclick="sortTable(this,'tab-tenant',1)">Instalação</th><th class="sortable" onclick="sortTable(this,'tab-tenant',2)">Reparo</th><th class="sortable" onclick="sortTable(this,'tab-tenant',3)">Total</th><th>PSR</th><th>Status</th></tr></thead>
+            <tbody id="tab-tenant">
+              <tr><td class="b"><div class="fx"><div class="tlogo" style="background:#0040a0;color:#fff">TIM</div>TIM S.A.</div></td><td class="mo">3.412</td><td class="mo">1.843</td><td class="mo b">5.255</td><td><span class="tag tb2">TEL/Ability</span></td><td><span class="tag tg">✓ OK</span></td></tr>
+              <tr><td class="b"><div class="fx"><div class="tlogo" style="background:#6600cc;color:#fff">NIO</div>NIO</div></td><td class="mo">2.108</td><td class="mo">1.311</td><td class="mo b">3.419</td><td><span class="tag tb2">RS/Telemont</span></td><td><span class="tag tg">✓ OK</span></td></tr>
+              <tr><td class="b"><div class="fx"><div class="tlogo" style="background:var(--bg3);color:var(--t2)">OUT</div>Outros</div></td><td class="mo">987</td><td class="mo">586</td><td class="mo b">1.573</td><td><span class="tag tb2">Multi</span></td><td><span class="tag to">⚠ Monitor</span></td></tr>
+            </tbody></table>
+            <div style="margin-top:14px">
+              <div class="ct" style="margin-bottom:9px">Tipo de <span>OS</span></div>
+              <canvas id="chart-os-tipo" style="width:100%;height:100px;display:block"></canvas>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <div class="card hl an">
+              <div class="ct">Score <span>VIP</span></div>
+              <div class="fx" style="gap:12px">
+                <div class="sring"><svg width="70" height="70" viewBox="0 0 70 70"><circle cx="35" cy="35" r="28" stroke="var(--bg3)" stroke-width="5" fill="none"/><circle cx="35" cy="35" r="28" stroke="var(--vy)" stroke-width="5" fill="none" stroke-dasharray="176" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 35 35)"/></svg><div class="sringv" style="color:var(--vy)">50</div></div>
+                <div style="flex:1"><div style="font-size:10.5px;color:var(--t3);margin-bottom:5px">Evolução mensal</div><canvas id="chart-vip-hist" style="width:100%;height:44px;display:block"></canvas><div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--vy);margin-top:3px">50/50 todos meses</div></div>
+              </div>
+            </div>
+            <div class="card an">
+              <div class="ct">PSRs — <span>Ranking</span></div>
+              <table class="tbl"><thead><tr><th>PSR</th><th>Técnicos</th><th>OS/dia</th><th>Score</th></tr></thead>
+              <tbody>
+                <tr><td class="b">TEL Telecom</td><td class="mo">1.200</td><td class="mo">3.840</td><td><span class="tag tg">96</span></td></tr>
+                <tr><td class="b">Ability</td><td class="mo">800</td><td class="mo">2.560</td><td><span class="tag tg">91</span></td></tr>
+                <tr><td class="b">RS Telecom</td><td class="mo">650</td><td class="mo">1.950</td><td><span class="tag to">78</span></td></tr>
+                <tr><td class="b">Telemont</td><td class="mo">580</td><td class="mo">1.450</td><td><span class="tag to">74</span></td></tr>
+              </tbody></table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INDICADORES -->
+      <div class="panel" id="pind">
+        <div class="fxb" style="margin-bottom:12px">
+          <div class="st" style="margin:0">Indicadores VIP — Análise</div>
+          <button class="ebtn" onclick="exportPDF('Indicadores VIP')">⬇ Exportar PDF</button>
+        </div>
+        <div class="tabs">
+          <button class="tabb on" onclick="swt(this,'ti0')">Infância 30D</button>
+          <button class="tabb" onclick="swt(this,'ti1')">Instalação 96h</button>
+          <button class="tabb" onclick="swt(this,'ti2')">Reparo 24h</button>
+          <button class="tabb" onclick="swt(this,'ti3')">1ª Agenda</button>
+          <button class="tabb" onclick="swt(this,'ti4')">Repetida 30D</button>
+          <button class="tabb" onclick="swt(this,'ti5')">Reparo/Planta</button>
+        </div>
+        <div id="ti0">
+          <div class="g3" style="margin-bottom:10px">
+            <div class="kpi ka"><div class="klbl">Indicador Atual</div><div class="kv" style="color:var(--red)">5,8%</div><div class="ksub"><span class="tr td">▲ Acima do limite 5%</span></div></div>
+            <div class="kpi"><div class="klbl">Meta Contratual</div><div class="kv" style="color:var(--vy)">4,0%</div><div class="ksub">Limite:5% | 20 pontos</div></div>
+            <div class="kpi ka"><div class="klbl">Projeção fim mês</div><div class="kv" style="color:var(--orange)">5,2%</div><div class="ksub"><span class="tr tn">Ainda acima</span></div></div>
+          </div>
+          <div class="g2" style="margin-bottom:10px">
+            <div class="card"><div class="ct" style="margin-bottom:8px">Tendência <span>Histórica</span></div>
+              <canvas id="chart-infancia-hist" style="width:100%;height:100px;display:block"></canvas>
+            </div>
+            <div class="card"><div class="ct" style="margin-bottom:8px">Distribuição <span>Municípios</span></div>
+              <canvas id="chart-municipio-ua" style="width:100%;height:100px;display:block"></canvas>
+            </div>
+          </div>
+          <div class="g2">
+            <div class="card"><div class="fxb" style="margin-bottom:10px"><div class="ct">Por <span>Município</span></div><button class="ebtn" onclick="exportCSV('infancia-municipio')">⬇ CSV</button></div>
+              <div class="mr"><div class="mrn">Rio de Janeiro</div><div class="mrb"><div class="mrf" style="width:65%;background:var(--red)"></div></div><div class="mrv">9.378</div><div class="mrp">65,6%</div></div>
+              <div class="mr"><div class="mrn">Duque de Caxias</div><div class="mrb"><div class="mrf" style="width:9%;background:var(--orange)"></div></div><div class="mrv">1.340</div><div class="mrp">9,4%</div></div>
+              <div class="mr"><div class="mrn">Belford Roxo</div><div class="mrb"><div class="mrf" style="width:6%;background:var(--orange)"></div></div><div class="mrv">867</div><div class="mrp">6,1%</div></div>
+              <div class="mr"><div class="mrn">Nilópolis</div><div class="mrb"><div class="mrf" style="width:3%"></div></div><div class="mrv">454</div><div class="mrp">3,2%</div></div>
+              <div class="mr"><div class="mrn">Nova Iguaçu</div><div class="mrb"><div class="mrf" style="width:2%"></div></div><div class="mrv">248</div><div class="mrp">1,7%</div></div>
+              <div class="mr" style="border:none"><div class="mrn" style="font-weight:700;color:var(--t1)">TOTAL RJ</div><div class="mrb"></div><div class="mrv" style="color:var(--vy)">14.298</div><div class="mrp" style="color:var(--t1)">100%</div></div>
+            </div>
+            <div class="card"><div class="ct">Por <span>Faixa de Aging</span></div>
+              <table class="tbl"><thead><tr><th>Faixa</th><th>Qtd.</th><th>%</th><th>Risco</th></tr></thead>
+              <tbody><tr><td>1–7d</td><td class="mo">412</td><td class="mo">2,9%</td><td><span class="tag tg">Baixo</span></td></tr><tr><td>8–15d</td><td class="mo">287</td><td class="mo">2,0%</td><td><span class="tag to">Médio</span></td></tr><tr><td>16–21d</td><td class="mo">198</td><td class="mo">1,4%</td><td><span class="tag to">Médio</span></td></tr><tr><td>22–25d</td><td class="mo">143</td><td class="mo">1,0%</td><td><span class="tag ta">Alto</span></td></tr><tr><td>26–30d</td><td class="mo">389</td><td class="mo">2,7%</td><td><span class="tag ta">Crítico</span></td></tr></tbody></table>
+              <div style="margin-top:12px;padding:10px;background:var(--bg3);border-radius:6px"><div style="font-size:10.5px;color:var(--t3);margin-bottom:4px">⚡ Ação Recomendada</div><div style="font-size:12px;color:var(--t1)">Priorizar faixas 26–30d no RJ. Alocar +120 técnicos via TEL para redução de 1,8pp até fim do mês.</div></div>
+            </div>
+          </div>
+        </div>
+        <div id="ti1" style="display:none"><div class="g3"><div class="kpi ko"><div class="klbl">Instalação 96h</div><div class="kv" style="color:var(--green)">91,3%</div><div class="ksub"><span class="tr tu">▲ Acima da meta</span></div></div><div class="kpi"><div class="klbl">Meta</div><div class="kv" style="color:var(--vy)">90,0%</div><div class="ksub">Limite:85% | 15pts</div></div><div class="kpi"><div class="klbl">Fora do Prazo</div><div class="kv" style="color:var(--orange)">8,7%</div><div class="ksub">868 OS atrasadas</div></div></div>
+          <div class="card" style="margin-top:10px"><div class="ct" style="margin-bottom:8px">Tendência <span>Histórica</span></div>
+            <canvas id="chart-instalacao-hist" style="width:100%;height:100px;display:block"></canvas>
+          </div>
+        </div>
+        <div id="ti2" style="display:none"><div class="g3"><div class="kpi ka"><div class="klbl">Reparo 24h</div><div class="kv" style="color:var(--orange)">71,4%</div><div class="ksub"><span class="tr tn">Entre limite e meta</span></div></div><div class="kpi"><div class="klbl">Meta</div><div class="kv" style="color:var(--vy)">75,0%</div><div class="ksub">Limite:70% | 10pts</div></div><div class="kpi"><div class="klbl">Fora do Prazo</div><div class="kv" style="color:var(--red)">28,6%</div><div class="ksub">1.069 OS &gt; 24h</div></div></div></div>
+        <div id="ti3" style="display:none"><div class="g2"><div class="kpi ko"><div class="klbl">1ª Agenda Inst.</div><div class="kv" style="color:var(--green)">86,2%</div><div class="ksub"><span class="tr tu">▲ Acima meta 85%</span></div></div><div class="kpi ko"><div class="klbl">1ª Agenda Rep.</div><div class="kv" style="color:var(--green)">84,7%</div><div class="ksub"><span class="tr tn">Próximo meta</span></div></div></div></div>
+        <div id="ti4" style="display:none"><div class="g3"><div class="kpi ka"><div class="klbl">Repetida 30D</div><div class="kv" style="color:var(--orange)">9,4%</div><div class="ksub"><span class="tr td">▲ Acima meta 9%</span></div></div><div class="kpi"><div class="klbl">Meta</div><div class="kv" style="color:var(--vy)">9,0%</div><div class="ksub">Limite:10% | 15pts</div></div><div class="kpi"><div class="klbl">Repetições</div><div class="kv" style="color:var(--orange)">962</div><div class="ksub">Re-abertos</div></div></div></div>
+        <div id="ti5" style="display:none"><div class="g3"><div class="kpi ko"><div class="klbl">Reparo/Planta</div><div class="kv" style="color:var(--green)">1,82%</div><div class="ksub"><span class="tr tu">▼ Abaixo meta 2%</span></div></div><div class="kpi"><div class="klbl">Meta</div><div class="kv" style="color:var(--vy)">2,0%</div><div class="ksub">Limite:2,5% | 15pts</div></div><div class="kpi ko"><div class="klbl">Planta Total RJ</div><div class="kv" style="color:var(--green)">14.298</div><div class="ksub">UAs ativas</div></div></div></div>
+      </div>
+
+      <!-- OPERAÇÕES -->
+      <div class="panel" id="pops">
+        <div class="fxb" style="margin-bottom:10px">
+          <div class="st" style="margin:0">Ordens de Serviço</div>
+          <div class="ebtn-grp">
+            <button class="ebtn" onclick="openModal('modal-os')">+ Nova OS</button>
+            <button class="ebtn" onclick="exportCSV('os-feed')">⬇ CSV</button>
+            <button class="ebtn" onclick="exportPDF('Operações OS')">⬇ PDF</button>
+          </div>
+        </div>
+        <div class="g4">
+          <div class="kpi an"><div class="klbl">Abertas Hoje</div><div class="kv" style="color:var(--vy)">10.247</div><div class="ksub"><span class="tr tn">Nacional</span></div></div>
+          <div class="kpi ko an"><div class="klbl">Concluídas</div><div class="kv" style="color:var(--green)">8.931</div><div class="ksub"><span class="tr tu">87,2%</span></div></div>
+          <div class="kpi ka an"><div class="klbl">Atrasadas</div><div class="kv" style="color:var(--red)">1.316</div><div class="ksub"><span class="tr td">12,8%</span></div></div>
+          <div class="kpi an"><div class="klbl">Canceladas</div><div class="kv" style="color:var(--orange)">412</div><div class="ksub">4,0%</div></div>
+        </div>
+        <div class="gw" style="margin-top:0">
+          <div class="card an">
+            <div class="fxb" style="margin-bottom:10px">
+              <div class="ct">Feed <span>OS Recentes</span></div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <input class="search-box" placeholder="🔍 Buscar OS, técnico..." oninput="filterTable(this,'tab-os')">
+                <div class="ubadge"><span class="live"></span>Ao Vivo</div>
+              </div>
+            </div>
+            <table class="tbl"><thead><tr><th class="sortable" onclick="sortTable(this,'tab-os',0)">OS ID</th><th>Tipo</th><th class="sortable" onclick="sortTable(this,'tab-os',2)">Município</th><th>Técnico</th><th>PSR</th><th>Tenant</th><th>Status</th><th class="sortable" onclick="sortTable(this,'tab-os',7)">SLA</th></tr></thead>
+            <tbody id="tab-os">
+              <tr><td class="mo">OS-084321</td><td>Instalação</td><td>Rio de Janeiro</td><td>Carlos M.</td><td>TEL</td><td><span class="tag tb2">TIM</span></td><td><span class="tag tg">✓</span></td><td class="mo" style="color:var(--green)">72h</td></tr>
+              <tr><td class="mo">OS-084320</td><td>Reparo</td><td>Belford Roxo</td><td>Marcos S.</td><td>Ability</td><td><span class="tag tb2">NIO</span></td><td><span class="tag tg">✓</span></td><td class="mo" style="color:var(--green)">18h</td></tr>
+              <tr><td class="mo">OS-084319</td><td>Instalação</td><td>Niterói</td><td>André L.</td><td>TEL</td><td><span class="tag tb2">TIM</span></td><td><span class="tag to">⟳</span></td><td class="mo" style="color:var(--orange)">48h</td></tr>
+              <tr><td class="mo">OS-084318</td><td>Reparo</td><td>Duque de Caxias</td><td>Felipe R.</td><td>RS</td><td><span class="tag tb2">NIO</span></td><td><span class="tag ta">✕</span></td><td class="mo" style="color:var(--red)">31h</td></tr>
+              <tr><td class="mo">OS-084315</td><td>Reparo</td><td>São Gonçalo</td><td>Lucas B.</td><td>TEL</td><td><span class="tag tb2">TIM</span></td><td><span class="tag ta">Infância</span></td><td class="mo" style="color:var(--red)">28d</td></tr>
+              <tr><td class="mo">OS-084310</td><td>Manutenção</td><td>Nova Iguaçu</td><td>Roberto A.</td><td>Telemont</td><td><span class="tag tb2">TIM</span></td><td><span class="tag tg">✓</span></td><td class="mo" style="color:var(--green)">6h</td></tr>
+            </tbody></table>
+            <div class="pag" id="pag-os">
+              <button class="pag-btn on">1</button>
+              <button class="pag-btn" onclick="toast('Página 2 carregada')">2</button>
+              <button class="pag-btn" onclick="toast('Página 3 carregada')">3</button>
+              <span class="pag-info">6 de 10.247 OS</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <div class="card an"><div class="ct">Por <span>Status</span></div>
+              <div class="pr"><div class="prl">Concluídas</div><div class="prb"><div class="prf" style="width:87%;background:var(--green)"></div></div><div class="prv" style="color:var(--green)">8.931</div></div>
+              <div class="pr"><div class="prl">Em Campo</div><div class="prb"><div class="prf" style="width:8%;background:var(--blue)"></div></div><div class="prv">820</div></div>
+              <div class="pr"><div class="prl">Agendadas</div><div class="prb"><div class="prf" style="width:3%;background:var(--orange)"></div></div><div class="prv">310</div></div>
+              <div class="pr"><div class="prl">Atrasadas</div><div class="prb"><div class="prf" style="width:2%;background:var(--red)"></div></div><div class="prv">186</div></div>
+            </div>
+            <div class="card an"><div class="ct">OS/dia por <span>PSR</span></div>
+              <canvas id="chart-psr-prod" style="width:100%;height:110px;display:block"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TÉCNICOS -->
+      <div class="panel" id="ptec">
+        <div class="fxb" style="margin-bottom:10px">
+          <div class="st" style="margin:0">Técnicos &amp; PSR</div>
+          <div class="ebtn-grp">
+            <button class="ebtn" onclick="exportCSV('tecnicos')">⬇ CSV</button>
+            <button class="ebtn" onclick="exportPDF('Técnicos e PSR')">⬇ PDF</button>
+          </div>
+        </div>
+        <div class="g4">
+          <div class="kpi an"><div class="klbl">Total Técnicos</div><div class="kv" style="color:var(--vy)">4.000</div><div class="ksub">Nacional</div></div>
+          <div class="kpi ko an"><div class="klbl">Em Campo</div><div class="kv" style="color:var(--green)">3.741</div><div class="ksub">93,5% disponível</div></div>
+          <div class="kpi an"><div class="klbl">Afastados</div><div class="kv" style="color:var(--orange)">259</div><div class="ksub">6,5%</div></div>
+          <div class="kpi an"><div class="klbl">PSRs Ativas</div><div class="kv">12</div><div class="ksub">Contratadas</div></div>
+        </div>
+        <div class="g2" style="margin-top:0">
+          <div class="card an">
+            <div class="fxb" style="margin-bottom:10px">
+              <div class="ct">Ranking <span>PSRs</span></div>
+              <input class="search-box" placeholder="🔍 Buscar PSR..." oninput="filterTable(this,'tab-psr')">
+            </div>
+            <table class="tbl"><thead><tr><th class="sortable" onclick="sortTable(this,'tab-psr',0)">#</th><th>PSR</th><th class="sortable" onclick="sortTable(this,'tab-psr',2)">Técnicos</th><th class="sortable" onclick="sortTable(this,'tab-psr',3)">OS/dia</th><th>Prazo</th><th class="sortable" onclick="sortTable(this,'tab-psr',5)">Score</th></tr></thead>
+            <tbody id="tab-psr">
+              <tr><td class="mo" style="color:var(--vy)">01</td><td class="b">TEL Telecom</td><td class="mo">1.200</td><td class="mo">3.840</td><td><span class="tag tg">91%</span></td><td class="mo" style="color:var(--vy)">96/100</td></tr>
+              <tr><td class="mo" style="color:var(--vy)">02</td><td class="b">Ability</td><td class="mo">800</td><td class="mo">2.560</td><td><span class="tag tg">89%</span></td><td class="mo" style="color:var(--green)">91/100</td></tr>
+              <tr><td class="mo">03</td><td class="b">RS Telecom</td><td class="mo">650</td><td class="mo">1.950</td><td><span class="tag to">82%</span></td><td class="mo" style="color:var(--orange)">78/100</td></tr>
+              <tr><td class="mo">04</td><td class="b">Telemont</td><td class="mo">580</td><td class="mo">1.450</td><td><span class="tag to">79%</span></td><td class="mo" style="color:var(--orange)">74/100</td></tr>
+            </tbody></table>
+          </div>
+          <div class="card an"><div class="ct">Por <span>Regional</span></div>
+            <div class="pr"><div class="prl">Sudeste</div><div class="prb"><div class="prf" style="width:45%;background:var(--vy)"></div></div><div class="prv">1.800</div></div>
+            <div class="pr"><div class="prl">Nordeste</div><div class="prb"><div class="prf" style="width:25%;background:var(--blue)"></div></div><div class="prv">1.000</div></div>
+            <div class="pr"><div class="prl">Sul</div><div class="prb"><div class="prf" style="width:13%;background:var(--purple)"></div></div><div class="prv">520</div></div>
+            <div class="pr"><div class="prl">Centro-Oeste</div><div class="prb"><div class="prf" style="width:10%;background:var(--green)"></div></div><div class="prv">400</div></div>
+            <div class="pr"><div class="prl">Norte</div><div class="prb"><div class="prf" style="width:7%;background:var(--orange)"></div></div><div class="prv">280</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TENANTS -->
+      <div class="panel" id="pten">
+        <div class="fxb" style="margin-bottom:12px">
+          <div class="st" style="margin:0">Tenants</div>
+          <button class="ebtn" onclick="openModal('modal-tenant')">+ Novo Tenant</button>
+        </div>
+        <div class="g3">
+          <div class="card hl an">
+            <div class="fx" style="margin-bottom:12px;gap:10px"><div class="tlogo" style="background:#0040a0;color:#fff;width:38px;height:38px;font-size:13px">TIM</div><div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px">TIM S.A.</div><div style="font-size:10.5px;color:var(--t3)">PSR: TEL / Ability</div></div></div>
+            <div class="g2" style="gap:5px;margin-bottom:10px">
+              <div style="background:var(--bg3);border-radius:6px;padding:8px;text-align:center"><div style="font-size:10px;color:var(--t3)">OS Hoje</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--vy)">5.255</div></div>
+              <div style="background:var(--bg3);border-radius:6px;padding:8px;text-align:center"><div style="font-size:10px;color:var(--t3)">SLA</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--green)">91%</div></div>
+            </div>
+            <div class="pr"><div class="prl">Instalação</div><div class="prb"><div class="prf" style="width:91%;background:var(--green)"></div></div><div class="prv">91%</div></div>
+            <div class="pr"><div class="prl">Reparo</div><div class="prb"><div class="prf" style="width:73%;background:var(--orange)"></div></div><div class="prv">73%</div></div>
+            <div class="pr"><div class="prl">1ª Agenda</div><div class="prb"><div class="prf" style="width:87%;background:var(--vy)"></div></div><div class="prv">87%</div></div>
+            <div style="margin-top:9px;display:flex;gap:5px;justify-content:space-between;align-items:center">
+              <div><span class="tag tg">Score A+</span> <span class="tag tb2">Ativo</span></div>
+              <button class="ebtn" onclick="exportPDF('TIM Detalhes')">⬇ Relatório</button>
+            </div>
+          </div>
+          <div class="card an">
+            <div class="fx" style="margin-bottom:12px;gap:10px"><div class="tlogo" style="background:#6600cc;color:#fff;width:38px;height:38px;font-size:13px">NIO</div><div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px">NIO</div><div style="font-size:10.5px;color:var(--t3)">PSR: RS / Telemont</div></div></div>
+            <div class="g2" style="gap:5px;margin-bottom:10px">
+              <div style="background:var(--bg3);border-radius:6px;padding:8px;text-align:center"><div style="font-size:10px;color:var(--t3)">OS Hoje</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--vy)">3.419</div></div>
+              <div style="background:var(--bg3);border-radius:6px;padding:8px;text-align:center"><div style="font-size:10px;color:var(--t3)">SLA</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--orange)">83%</div></div>
+            </div>
+            <div class="pr"><div class="prl">Instalação</div><div class="prb"><div class="prf" style="width:86%;background:var(--green)"></div></div><div class="prv">86%</div></div>
+            <div class="pr"><div class="prl">Reparo</div><div class="prb"><div class="prf" style="width:71%;background:var(--orange)"></div></div><div class="prv">71%</div></div>
+            <div class="pr"><div class="prl">1ª Agenda</div><div class="prb"><div class="prf" style="width:82%;background:var(--vy)"></div></div><div class="prv">82%</div></div>
+            <div style="margin-top:9px;display:flex;gap:5px;justify-content:space-between;align-items:center">
+              <div><span class="tag to">Score B+</span> <span class="tag tb2">Ativo</span></div>
+              <button class="ebtn" onclick="exportPDF('NIO Detalhes')">⬇ Relatório</button>
+            </div>
+          </div>
+          <div class="card an" style="border-style:dashed;display:flex;align-items:center;justify-content:center">
+            <div style="text-align:center;padding:16px"><div style="font-size:24px;color:var(--t3);margin-bottom:8px">+</div><div style="font-size:12.5px;color:var(--t2);font-weight:600">Novo Tenant</div><div style="font-size:11px;color:var(--t3);margin:5px 0 14px">Cadastrar nova empresa</div><button class="btnlo" style="padding:8px 20px;font-size:12px;border-radius:var(--rx)" onclick="openModal('modal-tenant')">+ Adicionar Tenant</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MUNICÍPIOS -->
+      <div class="panel" id="pmun">
+        <div class="fxb" style="margin-bottom:12px">
+          <div class="st" style="margin:0">Municípios — RJ</div>
+          <div class="ebtn-grp">
+            <input class="search-box" placeholder="🔍 Buscar município..." oninput="filterTable(this,'tab-mun')">
+            <button class="ebtn" onclick="exportCSV('municipios')">⬇ CSV</button>
+            <button class="ebtn" onclick="exportPDF('Municípios RJ')">⬇ PDF</button>
+          </div>
+        </div>
+        <div class="card an">
+          <table class="tbl"><thead><tr><th class="sortable" onclick="sortTable(this,'tab-mun',0)">Município</th><th class="sortable" onclick="sortTable(this,'tab-mun',1)">Planta</th><th class="sortable" onclick="sortTable(this,'tab-mun',2)">% Planta</th><th class="sortable" onclick="sortTable(this,'tab-mun',3)">OS Hoje</th><th class="sortable" onclick="sortTable(this,'tab-mun',4)">Infância</th><th class="sortable" onclick="sortTable(this,'tab-mun',5)">Rep/Planta</th><th>Status</th></tr></thead>
+          <tbody id="tab-mun">
+            <tr><td class="b">Rio de Janeiro</td><td class="mo">9.378</td><td class="mo">65,6%</td><td class="mo">6.742</td><td><span class="tag ta">6,1%</span></td><td class="mo">1,9%</td><td><span class="tag to">Monitor</span></td></tr>
+            <tr><td class="b">Duque de Caxias</td><td class="mo">1.340</td><td class="mo">9,4%</td><td class="mo">962</td><td><span class="tag to">4,8%</span></td><td class="mo">2,1%</td><td><span class="tag to">Monitor</span></td></tr>
+            <tr><td class="b">Belford Roxo</td><td class="mo">867</td><td class="mo">6,1%</td><td class="mo">622</td><td><span class="tag to">4,2%</span></td><td class="mo">1,7%</td><td><span class="tag tg">OK</span></td></tr>
+            <tr><td class="b">Nilópolis</td><td class="mo">454</td><td class="mo">3,2%</td><td class="mo">326</td><td><span class="tag tg">3,1%</span></td><td class="mo">1,4%</td><td><span class="tag tg">OK</span></td></tr>
+            <tr><td class="b">Nova Iguaçu</td><td class="mo">248</td><td class="mo">1,7%</td><td class="mo">178</td><td><span class="tag tg">3,8%</span></td><td class="mo">1,5%</td><td><span class="tag tg">OK</span></td></tr>
+            <tr><td class="b">Mesquita</td><td class="mo">248</td><td class="mo">1,7%</td><td class="mo">178</td><td><span class="tag tg">3,2%</span></td><td class="mo">1,6%</td><td><span class="tag tg">OK</span></td></tr>
+            <tr><td class="b">Queimados</td><td class="mo">118</td><td class="mo">0,8%</td><td class="mo">85</td><td><span class="tag tg">2,9%</span></td><td class="mo">1,2%</td><td><span class="tag tg">OK</span></td></tr>
+            <tr><td class="b">Niterói</td><td class="mo">38</td><td class="mo">0,3%</td><td class="mo">27</td><td><span class="tag tg">2,1%</span></td><td class="mo">0,9%</td><td><span class="tag tg">OK</span></td></tr>
+            <tr><td class="b">São Gonçalo</td><td class="mo">280</td><td class="mo">2,0%</td><td class="mo">201</td><td><span class="tag to">4,0%</span></td><td class="mo">1,8%</td><td><span class="tag tg">OK</span></td></tr>
+            <tr><td class="b">Paracambi</td><td class="mo">1</td><td class="mo">0,0%</td><td class="mo">1</td><td><span class="tag tg">0,0%</span></td><td class="mo">0,0%</td><td><span class="tag tg">OK</span></td></tr>
+          </tbody></table>
+          <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center">
+            <div style="font-size:11.5px;color:var(--t3)">Total: 10 municípios | 14.298 UAs</div>
+            <div class="pag">
+              <button class="pag-btn on">1</button>
+              <span class="pag-info">10 de 10 municípios</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PLANTA -->
+      <div class="panel" id="pplt">
+        <div class="fxb" style="margin-bottom:10px">
+          <div class="st" style="margin:0">Reparo por Planta</div>
+          <button class="ebtn" onclick="exportPDF('Reparo por Planta')">⬇ Exportar PDF</button>
+        </div>
+        <div class="g4">
+          <div class="kpi ko an"><div class="klbl">Indicador</div><div class="kv" style="color:var(--green)">1,82%</div><div class="ksub">Meta:2% Limite:2,5%</div></div>
+          <div class="kpi an"><div class="klbl">Planta Total RJ</div><div class="kv">14.298</div><div class="ksub">UAs ativas</div></div>
+          <div class="kpi ko an"><div class="klbl">Reparos Proj.</div><div class="kv" style="color:var(--green)">260</div><div class="ksub">Projeção mensal</div></div>
+          <div class="kpi an"><div class="klbl">Contratual TIM</div><div class="kv" style="color:var(--vy)">Ativo</div><div class="ksub">Manutenção prev.</div></div>
+        </div>
+        <div class="card an" style="margin-top:0"><div class="ct">Distribuição <span>por Município</span></div>
+          <div class="mr"><div class="mrn">Rio de Janeiro</div><div class="mrb"><div class="mrf" style="width:65%"></div></div><div class="mrv">9.378</div><div class="mrp">65,6%</div></div>
+          <div class="mr"><div class="mrn">Duque de Caxias</div><div class="mrb"><div class="mrf" style="width:9%"></div></div><div class="mrv">1.340</div><div class="mrp">9,4%</div></div>
+          <div class="mr"><div class="mrn">Belford Roxo</div><div class="mrb"><div class="mrf" style="width:6%"></div></div><div class="mrv">867</div><div class="mrp">6,1%</div></div>
+          <div class="mr"><div class="mrn">Nilópolis</div><div class="mrb"><div class="mrf" style="width:3%"></div></div><div class="mrv">454</div><div class="mrp">3,2%</div></div>
+          <div class="mr"><div class="mrn">Nova Iguaçu</div><div class="mrb"><div class="mrf" style="width:2%"></div></div><div class="mrv">248</div><div class="mrp">1,7%</div></div>
+          <div class="mr"><div class="mrn">São Gonçalo</div><div class="mrb"><div class="mrf" style="width:2%"></div></div><div class="mrv">280</div><div class="mrp">2,0%</div></div>
+          <div class="mr"><div class="mrn">Mesquita</div><div class="mrb"><div class="mrf" style="width:2%"></div></div><div class="mrv">248</div><div class="mrp">1,7%</div></div>
+          <div class="mr"><div class="mrn">Queimados</div><div class="mrb"><div class="mrf" style="width:1%"></div></div><div class="mrv">118</div><div class="mrp">0,8%</div></div>
+          <div class="mr" style="border:none"><div class="mrn" style="font-weight:700;color:var(--t1)">TOTAL</div><div class="mrb"></div><div class="mrv" style="color:var(--vy)">14.298</div><div class="mrp" style="color:var(--t1)">100%</div></div>
+        </div>
+      </div>
+
+      <!-- S&OP -->
+      <div class="panel" id="psop">
+        <div class="istrip"><span>⬡</span><span><strong style="color:var(--vy)">S&amp;OP:</strong> Reunião 05/08/2025 — Crítico: Infância 30D (RJ), Repetida 30D.</span>
+          <button class="ebtn" style="margin-left:auto;flex-shrink:0" onclick="exportPDF('S&OP Planning')">⬇ Exportar PDF</button>
+        </div>
+        <div class="st">Planejamento Estratégico</div>
+        <div class="g3">
+          <div class="card hl an"><div class="ct">Demanda <span>Ago/25</span></div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:22px;color:var(--vy)">10.850</div>
+            <div style="font-size:10.5px;color:var(--t3);margin:2px 0 12px">OS/dia projetadas</div>
+            <div class="pr"><div class="prl">Instalações</div><div class="prb"><div class="prf" style="width:65%;background:var(--blue)"></div></div><div class="prv">7.053</div></div>
+            <div class="pr"><div class="prl">Reparos</div><div class="prb"><div class="prf" style="width:33%;background:var(--orange)"></div></div><div class="prv">3.580</div></div>
+            <div class="pr"><div class="prl">Manutenção</div><div class="prb"><div class="prf" style="width:2%;background:var(--purple)"></div></div><div class="prv">217</div></div>
+          </div>
+          <div class="card an"><div class="ct">Capacidade <span>Operacional</span></div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:22px;color:var(--green)">12.000</div>
+            <div style="font-size:10.5px;color:var(--t3);margin:2px 0 12px">OS/dia capacidade máx.</div>
+            <div class="pr"><div class="prl">TEL Telecom</div><div class="prb"><div class="prf" style="width:40%;background:var(--vy)"></div></div><div class="prv">4.800</div></div>
+            <div class="pr"><div class="prl">Ability</div><div class="prb"><div class="prf" style="width:27%;background:var(--blue)"></div></div><div class="prv">3.200</div></div>
+            <div class="pr"><div class="prl">RS+Telemont</div><div class="prb"><div class="prf" style="width:25%;background:var(--purple)"></div></div><div class="prv">3.000</div></div>
+            <div class="pr"><div class="prl">Outras</div><div class="prb"><div class="prf" style="width:8%;background:var(--orange)"></div></div><div class="prv">1.000</div></div>
+          </div>
+          <div class="card an"><div class="ct">Gap <span>S&amp;OP</span></div>
+            <div style="padding:11px;background:rgba(0,201,106,.07);border:1px solid rgba(0,201,106,.18);border-radius:6px;margin-bottom:9px"><div style="font-size:10.5px;color:var(--green);font-weight:700">✓ CAPACIDADE EXCEDENTE</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:20px;color:var(--green)">+1.150 OS/dia</div></div>
+            <div style="padding:10px;background:rgba(255,58,85,.06);border:1px solid rgba(255,58,85,.18);border-radius:6px"><div style="font-size:10.5px;color:var(--red);font-weight:700">⚠ ATENÇÃO QUALIDADE</div><div style="font-size:12px;color:var(--t1);margin-top:4px">Volume OK, mas Infância 30D e Repetida 30D requerem ação corretiva urgente no RJ.</div></div>
+          </div>
+        </div>
+        <div class="card an" style="margin-bottom:10px">
+          <div class="fxb" style="margin-bottom:10px">
+            <div class="ct">Projeção de <span>Demanda OS/dia</span></div>
+            <button class="ebtn" onclick="exportCSV('all')">⬇ CSV</button>
+          </div>
+          <canvas id="chart-sop-demanda" style="width:100%;height:110px;display:block"></canvas>
+        </div>
+        <div class="g2" style="margin-top:0">
+          <div class="card an">
+            <div class="fxb" style="margin-bottom:10px">
+              <div class="ct">Plano de <span>Ação</span></div>
+              <button class="ebtn" onclick="openModal('modal-action')">+ Adicionar</button>
+            </div>
+            <table class="tbl"><thead><tr><th>Iniciativa</th><th>Impacto</th><th>Resp.</th><th>Prazo</th><th>Status</th><th>Ação</th></tr></thead>
+            <tbody id="tab-actions">
+              <tr><td class="b">Redução Infância 30D RJ</td><td><span class="tag ta">Crítico</span></td><td>S&OP</td><td class="mo">31/07</td><td><span class="tag to">Exec.</span></td><td><button class="ebtn" style="padding:2px 7px;font-size:10px" onclick="updateStatus(this)">✎</button></td></tr>
+              <tr><td class="b">Reforço TEL–RJ</td><td><span class="tag to">Alto</span></td><td>TEL</td><td class="mo">15/07</td><td><span class="tag tg">✓</span></td><td><button class="ebtn" style="padding:2px 7px;font-size:10px" onclick="updateStatus(this)">✎</button></td></tr>
+              <tr><td class="b">Treinamento Repetida</td><td><span class="tag to">Alto</span></td><td>Qual.</td><td class="mo">05/08</td><td><span class="tag to">Exec.</span></td><td><button class="ebtn" style="padding:2px 7px;font-size:10px" onclick="updateStatus(this)">✎</button></td></tr>
+              <tr><td class="b">Expansão Planta D.Caxias</td><td><span class="tag tb2">Médio</span></td><td>Infra</td><td class="mo">Set/25</td><td><span class="tag tb2">Plan.</span></td><td><button class="ebtn" style="padding:2px 7px;font-size:10px" onclick="updateStatus(this)">✎</button></td></tr>
+              <tr><td class="b">Onboarding PSR SP</td><td><span class="tag tb2">Médio</span></td><td>Contr.</td><td class="mo">Ago/25</td><td><span class="tag tb2">Plan.</span></td><td><button class="ebtn" style="padding:2px 7px;font-size:10px" onclick="updateStatus(this)">✎</button></td></tr>
+            </tbody></table>
+          </div>
+          <div class="card an"><div class="ct">Ciclo <span>S&amp;OP</span></div>
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <div class="ciclo-step" style="display:flex;gap:9px;align-items:center;padding:8px 10px;background:rgba(0,201,106,.05);border-radius:6px;border-left:2px solid var(--green)"><div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--green);width:22px;flex-shrink:0">01</div><div><div style="font-size:12px;font-weight:600;color:var(--t1)">Coleta de Dados</div><div style="font-size:10.5px;color:var(--t3)">OS, técnicos, BI qualidade</div></div><span class="tag tg" style="margin-left:auto;flex-shrink:0">✓</span></div>
+              <div class="ciclo-step" style="display:flex;gap:9px;align-items:center;padding:8px 10px;background:rgba(0,201,106,.05);border-radius:6px;border-left:2px solid var(--green)"><div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--green);width:22px;flex-shrink:0">02</div><div><div style="font-size:12px;font-weight:600;color:var(--t1)">Revisão de Demanda</div><div style="font-size:10.5px;color:var(--t3)">Projeção OS/Tenant/região</div></div><span class="tag tg" style="margin-left:auto;flex-shrink:0">✓</span></div>
+              <div class="ciclo-step" style="display:flex;gap:9px;align-items:center;padding:8px 10px;background:rgba(245,158,11,.05);border-radius:6px;border-left:2px solid var(--orange);cursor:pointer" onclick="toast('Revisão de Suprimento em andamento')"><div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--orange);width:22px;flex-shrink:0">03</div><div><div style="font-size:12px;font-weight:600;color:var(--t1)">Revisão de Suprimento</div><div style="font-size:10.5px;color:var(--t3)">Capacidade PSR/técnicos</div></div><span class="tag to" style="margin-left:auto;flex-shrink:0">⟳</span></div>
+              <div class="ciclo-step" style="display:flex;gap:9px;align-items:center;padding:8px 10px;background:rgba(61,130,245,.05);border-radius:6px;border-left:2px solid var(--blue);cursor:pointer" onclick="toast('Reunião S&OP agendada: 05/08/2025')"><div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--blue);width:22px;flex-shrink:0">04</div><div><div style="font-size:12px;font-weight:600;color:var(--t1)">Reunião S&amp;OP</div><div style="font-size:10.5px;color:var(--t3)">Alinhamento executivo</div></div><span class="tag tb2" style="margin-left:auto;flex-shrink:0">05/Ago</span></div>
+              <div class="ciclo-step" style="display:flex;gap:9px;align-items:center;padding:8px 10px;background:var(--bg3);border-radius:6px;border-left:2px solid var(--t3)"><div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--t3);width:22px;flex-shrink:0">05</div><div><div style="font-size:12px;font-weight:600;color:var(--t1)">Execução e Controle</div><div style="font-size:10.5px;color:var(--t3)">Monitoramento diário</div></div><span class="tag tb2" style="margin-left:auto;flex-shrink:0">Cont.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONFIG -->
+      <div class="panel" id="pcfg">
+        <div class="st">Configurações do Sistema</div>
+        <div class="g2">
+          <div class="card an">
+            <div class="fxb" style="margin-bottom:12px">
+              <div class="ct">Parâmetros <span>VIP</span></div>
+              <button class="ebtn" onclick="exportCSV('vip-params')">⬇ CSV</button>
+            </div>
+            <table class="tbl"><thead><tr><th>Indicador</th><th>Limite</th><th>Meta</th><th>Pts</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Infância 30D</td><td class="mo">5,00%</td><td class="mo">4,00%</td><td class="mo">20</td><td><span class="tag ta">Alerta</span></td></tr>
+              <tr><td>Instalação 96h</td><td class="mo">85,00%</td><td class="mo">90,00%</td><td class="mo">15</td><td><span class="tag tg">OK</span></td></tr>
+              <tr><td>1ª Agenda Inst.</td><td class="mo">80,00%</td><td class="mo">85,00%</td><td class="mo">15</td><td><span class="tag tg">OK</span></td></tr>
+              <tr><td>Reparo/Planta</td><td class="mo">2,50%</td><td class="mo">2,00%</td><td class="mo">15</td><td><span class="tag tg">OK</span></td></tr>
+              <tr><td>Repetida 30D</td><td class="mo">10,00%</td><td class="mo">9,00%</td><td class="mo">15</td><td><span class="tag to">Monitor</span></td></tr>
+              <tr><td>1ª Agenda Rep.</td><td class="mo">80,00%</td><td class="mo">85,00%</td><td class="mo">10</td><td><span class="tag tg">OK</span></td></tr>
+              <tr><td>Reparo 24h</td><td class="mo">70,00%</td><td class="mo">75,00%</td><td class="mo">10</td><td><span class="tag to">Monitor</span></td></tr>
+            </tbody></table>
+            <div style="margin-top:14px">
+              <div class="ct" style="margin-bottom:10px">Preferências <span>do Sistema</span></div>
+              <div class="detail-row"><div class="detail-key">Tema atual</div><div class="detail-val"><button class="ebtn" onclick="toggleTheme()">🌙 Alternar tema</button></div></div>
+              <div class="detail-row"><div class="detail-key">Atualização ao vivo</div><div class="detail-val"><span class="tag tg">Ativo</span></div></div>
+              <div class="detail-row"><div class="detail-key">Intervalo de atualização</div><div class="detail-val">3,5 segundos</div></div>
+              <div class="detail-row"><div class="detail-key">Região padrão</div><div class="detail-val">SUDESTE / RJ</div></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <div class="card an" style="text-align:center;padding:28px">
+              <svg width="56" height="56" viewBox="0 0 80 80" fill="none" style="margin:0 auto 14px">
+                <defs><linearGradient id="cfl1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C8FF00"/><stop offset="1" stop-color="#88CC00"/></linearGradient><linearGradient id="cfl2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C8FF00" stop-opacity=".15"/><stop offset="1" stop-color="#C8FF00" stop-opacity=".03"/></linearGradient></defs>
+                <path d="M40 6L68 18L68 44C68 58 40 74 40 74C40 74 12 58 12 44L12 18Z" fill="url(#cfl2)" stroke="url(#cfl1)" stroke-width="1.5"/>
+                <path d="M27 28L40 52L53 28" stroke="url(#cfl1)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <circle cx="40" cy="21" r="3" fill="#C8FF00" opacity=".6"/>
+              </svg>
+              <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:var(--vy)">V.tal S&amp;OP System</div>
+              <div style="font-size:11px;color:var(--t3);margin-top:4px">v1.0 — Gerência S&amp;OP / Sudeste</div>
+              <div style="margin-top:12px;display:flex;gap:5px;flex-wrap:wrap;justify-content:center"><span class="tag tg">Sudeste</span><span class="tag tb2">FTTH</span><span class="tag ty2">VIP</span></div>
+              <div style="margin-top:14px;display:flex;gap:6px;flex-direction:column">
+                <button class="ebtn" style="justify-content:center;width:100%" onclick="exportPDF('Relatório Completo S&OP')">⬇ Exportar Relatório Completo</button>
+                <button class="ebtn" style="justify-content:center;width:100%" onclick="exportCSV('all')">⬇ Exportar Todos os Dados CSV</button>
+                <button class="btnlo" style="font-size:11.5px;padding:8px 16px;border-radius:var(--rx);margin-top:4px" onclick="confirmLogout()">← Sair do Sistema</button>
+              </div>
+            </div>
+            <div class="card an">
+              <div class="ct">Informações <span>Técnicas</span></div>
+              <div class="detail-row"><div class="detail-key">Tenant Principal</div><div class="detail-val">TIM / NIO</div></div>
+              <div class="detail-row"><div class="detail-key">PSRs Ativas</div><div class="detail-val">12 parceiros</div></div>
+              <div class="detail-row"><div class="detail-key">UAs na Planta</div><div class="detail-val">14.298 RJ</div></div>
+              <div class="detail-row"><div class="detail-key">Score VIP</div><div class="detail-val" style="color:var(--vy)">50/50 pts</div></div>
+              <div class="detail-row"><div class="detail-key">Última sync</div><div class="detail-val" id="cfg-sync">23/07 16:33</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /cnt -->
+
+    <div class="ftbar">
+      <svg width="16" height="16" viewBox="0 0 80 80" fill="none"><path d="M40 5L65 16L65 43C65 54 40 69 40 69C40 69 15 54 15 43L15 16Z" fill="none" stroke="#C8FF00" stroke-width="2" opacity=".5"/><path d="M28 27L40 50L52 27" stroke="#C8FF00" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+      V.tal — Sistema S&amp;OP v1.0
+      <span style="margin-left:auto;display:flex;align-items:center;gap:6px"><span class="live"></span><span id="ftrelogio">23/07/2025 16:33</span></span>
+    </div>
+  </div>
+</div>
+<script>
+/* =====================================================================
+   V.tal S&OP — Script completo v4
+   ===================================================================== */
+
+const TABS_IND = ['ti0','ti1','ti2','ti3','ti4','ti5'];
+const PANELS   = ['ov','ind','ops','tec','ten','mun','plt','sop','cfg'];
+const PANEL_TITLES = {
+  pov:'Visão Geral — S&OP', pind:'Indicadores VIP', pops:'Operações — OS',
+  ptec:'Técnicos & PSR',    pten:'Tenants',          pmun:'Municípios',
+  pplt:'Reparo / Planta',   psop:'S&OP Planning',    pcfg:'Configurações'
+};
+
+/* ── RELÓGIO ── */
+function updateClock(){
+  const now=new Date(), s=d=>String(d).padStart(2,'0');
+  const t =`${s(now.getDate())}/${s(now.getMonth()+1)} ${s(now.getHours())}:${s(now.getMinutes())}`;
+  const tf=`${s(now.getDate())}/${s(now.getMonth()+1)}/${now.getFullYear()} ${s(now.getHours())}:${s(now.getMinutes())}`;
+  ['relogio'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=t;});
+  ['ftrelogio','cfg-sync'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=tf;});
+}
+updateClock(); setInterval(updateClock, 30000);
+
+/* ── TEMA ── */
+function toggleTheme(){
+  const d=document.documentElement, dark=d.getAttribute('data-theme')==='dark';
+  d.setAttribute('data-theme', dark?'light':'dark');
+  const icon=dark?'☀️':'🌙';
+  document.querySelectorAll('.ttog').forEach(b=>b.textContent=icon);
+  drawAllCharts();
+  toast('Tema alterado para '+(dark?'claro':'escuro'));
+}
+
+/* ── PÁGINAS ── */
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+
+/* ── PAINÉIS ── */
+function showPanel(id, btn){
+  PANELS.forEach(p=>{
+    const el=document.getElementById('p'+p);
+    if(el) el.classList.remove('on');
+  });
+  const el=document.getElementById('p'+id);
+  if(el){ el.classList.add('on'); }
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
+  if(btn) btn.classList.add('on');
+  const t=document.getElementById('ptitle');
+  if(t) t.textContent=PANEL_TITLES['p'+id]||id;
+  // desenha gráficos ao entrar no painel
+  setTimeout(()=>drawAllCharts(), 80);
+}
+
+/* ── ABAS INDICADORES ── */
+function swt(btn, tid){
+  btn.closest('.tabs').querySelectorAll('.tabb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  TABS_IND.forEach(t=>{
+    const el=document.getElementById(t);
+    if(el) el.style.display='none';
+  });
+  const el=document.getElementById(tid);
+  if(el) el.style.display='block';
+}
+
+function goToIndicador(idx){
+  const navBtns=document.querySelectorAll('.ni');
+  showPanel('ind', navBtns[1]);
+  setTimeout(()=>{
+    const tabBtns=document.querySelectorAll('#pind .tabb');
+    if(tabBtns[idx]) swt(tabBtns[idx],'ti'+idx);
+  },60);
+}
+
+/* ── LOGIN ── */
+function doLogin(){
+  const e=document.getElementById('lemail');
+  if(!e||!e.value.trim()){ toast('⚠ Informe o e-mail corporativo'); return; }
+  if(!e.value.includes('@')){ toast('⚠ E-mail inválido'); return; }
+  enterApp('Gerente S&OP');
+}
+function loginAs(role){ enterApp(role); }
+function enterApp(role){
+  const parts=role.trim().split(' ');
+  const initials=((parts[0]||'G')[0]+(parts[1]||'S')[0]).toUpperCase();
+  document.getElementById('uname').textContent=role;
+  document.getElementById('uav').textContent=initials;
+  const pt=document.getElementById('perfil-title'), pr=document.getElementById('perfil-role');
+  if(pt) pt.textContent=role; if(pr) pr.textContent=role;
+  showPage('pa');
+  setTimeout(()=>drawAllCharts(), 200);
+  toast('Bem-vindo, '+role+'! ✓');
+}
+function confirmLogout(){
+  if(confirm('Deseja sair do sistema S&OP?')) showPage('pl');
+}
+
+/* ── FILTROS ── */
+function applyFilters(){
+  const reg=document.getElementById('fsel-reg')?.value||'';
+  const uf =document.getElementById('fsel-uf')?.value||'';
+  const mes=document.getElementById('fsel-mes')?.value||'';
+  const ten=document.getElementById('fsel-ten')?.value||'';
+  // Atualiza badge de filtro ativo
+  const badge=document.getElementById('filter-badge');
+  const ativos=[reg,uf,mes,ten].filter(v=>v&&!v.startsWith('Todos'));
+  if(badge){ badge.textContent=ativos.length>0?`${ativos.length} filtros`:''; badge.style.display=ativos.length?'inline':'none'; }
+  toast(`Filtros: ${reg} / ${uf} / ${mes} / ${ten}`);
+}
+
+/* ── EXPORTAÇÃO CSV ── */
+const CSV_DATA = {
+  municipios:[
+    ['Município','Planta (UAs)','% Planta','OS Hoje','Infância (%)','Rep/Planta (%)','Status'],
+    ['Rio de Janeiro','9378','65.6','6742','6.1','1.9','Monitor'],
+    ['Duque de Caxias','1340','9.4','962','4.8','2.1','Monitor'],
+    ['Belford Roxo','867','6.1','622','4.2','1.7','OK'],
+    ['Nilópolis','454','3.2','326','3.1','1.4','OK'],
+    ['Nova Iguaçu','248','1.7','178','3.8','1.5','OK'],
+    ['Mesquita','248','1.7','178','3.2','1.6','OK'],
+    ['Queimados','118','0.8','85','2.9','1.2','OK'],
+    ['Niterói','38','0.3','27','2.1','0.9','OK'],
+    ['São Gonçalo','280','2.0','201','4.0','1.8','OK'],
+    ['Paracambi','1','0.0','1','0.0','0.0','OK'],
+    ['TOTAL RJ','14298','100','10247','5.8','1.82','Monitor']
+  ],
+  'os-feed':[
+    ['OS ID','Tipo','Município','Técnico','PSR','Tenant','Status','SLA'],
+    ['OS-084321','Instalação','Rio de Janeiro','Carlos M.','TEL','TIM','Concluído','72h'],
+    ['OS-084320','Reparo','Belford Roxo','Marcos S.','Ability','NIO','Concluído','18h'],
+    ['OS-084319','Instalação','Niterói','André L.','TEL','TIM','Em andamento','48h'],
+    ['OS-084318','Reparo','Duque de Caxias','Felipe R.','RS','NIO','Atrasado','31h'],
+    ['OS-084315','Reparo','São Gonçalo','Lucas B.','TEL','TIM','Infância','28d'],
+    ['OS-084310','Manutenção','Nova Iguaçu','Roberto A.','Telemont','TIM','Concluído','6h']
+  ],
+  'vip-params':[
+    ['Indicador','Limite','Meta','Pontos','Valor Atual','Status'],
+    ['Infância 30D','5.00%','4.00%','20','5.8%','Alerta'],
+    ['Instalação 96h','85.00%','90.00%','15','91.3%','OK'],
+    ['1ª Agenda Inst.','80.00%','85.00%','15','86.2%','OK'],
+    ['Reparo/Planta','2.50%','2.00%','15','1.82%','OK'],
+    ['Repetida 30D','10.00%','9.00%','15','9.4%','Monitor'],
+    ['1ª Agenda Rep.','80.00%','85.00%','10','84.7%','OK'],
+    ['Reparo 24h','70.00%','75.00%','10','71.4%','Monitor']
+  ],
+  tecnicos:[
+    ['PSR','Técnicos','OS/dia','% Prazo','Score'],
+    ['TEL Telecom','1200','3840','91%','96/100'],
+    ['Ability','800','2560','89%','91/100'],
+    ['RS Telecom','650','1950','82%','78/100'],
+    ['Telemont','580','1450','79%','74/100'],
+    ['Outras PSRs','770','1000','75%','70/100'],
+    ['TOTAL','4000','10800','87%','82/100']
+  ],
+  tenants:[
+    ['Tenant','OS Instalação','OS Reparo','OS Total','SLA Inst.','SLA Rep.','PSR','Status'],
+    ['TIM S.A.','3412','1843','5255','91%','73%','TEL/Ability','OK'],
+    ['NIO','2108','1311','3419','86%','71%','RS/Telemont','OK'],
+    ['Outros','987','586','1573','80%','68%','Multi','Monitor']
+  ],
+  all:[
+    ['=== V.tal S&OP — Exportação Completa ==='],
+    ['Gerado em',new Date().toLocaleString('pt-BR')],[''],
+    ['=== INDICADORES VIP ==='],
+    ['Indicador','Valor','Meta','Status'],
+    ['Infância 30D','5.8%','4.0%','Alerta'],
+    ['Instalação 96h','91.3%','90.0%','OK'],
+    ['1ª Agenda Inst.','86.2%','85.0%','OK'],
+    ['1ª Agenda Rep.','84.7%','85.0%','OK'],
+    ['Reparo 24h','71.4%','75.0%','Monitor'],
+    ['Reparo/Planta','1.82%','2.0%','OK'],
+    ['Repetida 30D','9.4%','9.0%','Monitor'],
+    ['Score Total','50/50','-','OK'],[''],
+    ['=== KPIs OPERACIONAIS ==='],
+    ['OS Abertas/Dia','10247'],['Técnicos Ativos','4000'],
+    ['PSRs Ativas','12'],['Municípios RJ','10'],['Planta Total RJ','14298']
+  ]
+};
+
+function exportCSV(name){
+  const rows=CSV_DATA[name]||CSV_DATA['all'];
+  const bom='\uFEFF';
+  const csv=bom+rows.map(r=>r.map(c=>
+    String(c).includes(',')?`"${c}"`:c
+  ).join(',')).join('\r\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`vtal_sop_${name}_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  toast('✓ CSV exportado: '+name);
+}
+
+/* ── EXPORTAÇÃO PDF (nova janela formatada) ── */
+function exportPDF(name){
+  const w=window.open('','_blank','width=900,height=700');
+  if(!w){ toast('⚠ Permita pop-ups para exportar PDF'); return; }
+  w.document.write(`<!DOCTYPE html><html lang="pt-BR"><head>
+<meta charset="UTF-8"><title>V.tal S&OP — ${name}</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#f8f9fa;color:#1a1d24;font-family:'Segoe UI',sans-serif;font-size:13px;padding:0}
+  .cover{background:linear-gradient(135deg,#09090C 0%,#1a1d26 60%,#0d1a00 100%);color:#eee;padding:48px 40px 36px;position:relative;overflow:hidden}
+  .cover::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 80% 50%,rgba(200,255,0,.06),transparent)}
+  .cover-logo{font-size:28px;font-weight:800;color:#C8FF00;letter-spacing:-.01em;margin-bottom:4px}
+  .cover-sub{font-size:13px;color:#8A94A8;margin-bottom:28px}
+  .cover-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .ck{background:rgba(255,255,255,.04);border:1px solid rgba(200,255,0,.2);border-radius:8px;padding:12px 14px}
+  .ck-l{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#666;margin-bottom:4px}
+  .ck-v{font-size:22px;font-weight:800;color:#C8FF00}
+  .body{padding:32px 40px}
+  h2{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#555;border-bottom:1px solid #ddd;padding-bottom:8px;margin:28px 0 12px}
+  h2:first-child{margin-top:0}
+  table{width:100%;border-collapse:collapse;margin-bottom:4px;font-size:12px}
+  th{text-align:left;padding:7px 10px;background:#1a1d26;color:#C8FF00;font-size:10px;text-transform:uppercase;letter-spacing:.06em}
+  td{padding:7px 10px;border-bottom:1px solid #eee;color:#333}
+  tr:last-child td{border:none;font-weight:700;background:#f0f0f0}
+  .ok{color:#00a855;font-weight:700}.al{color:#e03030;font-weight:700}.mo{color:#e07000;font-weight:700}
+  .footer{background:#09090C;color:#555;padding:14px 40px;display:flex;justify-content:space-between;font-size:10px;margin-top:32px}
+  .footer span{color:#C8FF00}
+  .nprint{text-align:center;padding:20px;background:#e8ffe0;border:1px solid #C8FF00;border-radius:8px;margin-bottom:24px;font-size:13px;color:#333}
+  @media print{.nprint{display:none}.cover{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style></head><body>
+<div class="nprint">🖨️ <strong>Imprimir como PDF:</strong> Ctrl+P → Salvar como PDF &nbsp;|&nbsp; <button onclick="window.print()" style="background:#C8FF00;border:none;padding:6px 16px;border-radius:5px;font-weight:700;cursor:pointer">Imprimir agora</button></div>
+<div class="cover">
+  <div class="cover-logo">V.tal S&OP System</div>
+  <div class="cover-sub">Relatório: <strong style="color:#eee">${name}</strong> &nbsp;·&nbsp; ${new Date().toLocaleString('pt-BR')} &nbsp;·&nbsp; Regional SUDESTE / RJ</div>
+  <div class="cover-kpis">
+    <div class="ck"><div class="ck-l">OS Abertas/Dia</div><div class="ck-v">10.247</div></div>
+    <div class="ck"><div class="ck-l">Score VIP</div><div class="ck-v">50/50</div></div>
+    <div class="ck"><div class="ck-l">Técnicos Ativos</div><div class="ck-v">4.000</div></div>
+    <div class="ck"><div class="ck-l">PSRs Ativas</div><div class="ck-v">12</div></div>
+  </div>
+</div>
+<div class="body">
+<h2>Indicadores VIP — Status atual</h2>
+<table><tr><th>Indicador</th><th>Valor Atual</th><th>Meta</th><th>Limite</th><th>Pontos</th><th>Status</th></tr>
+<tr><td>Infância 30 Dias</td><td class="al">5,8%</td><td>4,0%</td><td>5,0%</td><td>20</td><td class="al">⚠ Alerta</td></tr>
+<tr><td>Instalação no Prazo 96h</td><td class="ok">91,3%</td><td>90,0%</td><td>85,0%</td><td>15</td><td class="ok">✓ OK</td></tr>
+<tr><td>Cumprimento 1ª Agenda Inst.</td><td class="ok">86,2%</td><td>85,0%</td><td>80,0%</td><td>15</td><td class="ok">✓ OK</td></tr>
+<tr><td>Reparo por Planta</td><td class="ok">1,82%</td><td>2,0%</td><td>2,5%</td><td>15</td><td class="ok">✓ OK</td></tr>
+<tr><td>Repetida 30 Dias</td><td class="mo">9,4%</td><td>9,0%</td><td>10,0%</td><td>15</td><td class="mo">⚠ Monitor</td></tr>
+<tr><td>Cumprimento 1ª Agenda Rep.</td><td class="ok">84,7%</td><td>85,0%</td><td>80,0%</td><td>10</td><td class="ok">✓ OK</td></tr>
+<tr><td>Reparo no Prazo 24h</td><td class="mo">71,4%</td><td>75,0%</td><td>70,0%</td><td>10</td><td class="mo">⚠ Monitor</td></tr>
+<tr><td><strong>TOTAL</strong></td><td><strong>—</strong></td><td><strong>—</strong></td><td><strong>—</strong></td><td class="ok"><strong>50/50</strong></td><td class="ok"><strong>✓ OK</strong></td></tr>
+</table>
+<h2>Municípios — RJ</h2>
+<table><tr><th>Município</th><th>Planta (UAs)</th><th>% Planta</th><th>OS Hoje</th><th>Infância</th><th>Rep/Planta</th><th>Status</th></tr>
+<tr><td>Rio de Janeiro</td><td>9.378</td><td>65,6%</td><td>6.742</td><td class="al">6,1%</td><td>1,9%</td><td class="mo">Monitor</td></tr>
+<tr><td>Duque de Caxias</td><td>1.340</td><td>9,4%</td><td>962</td><td class="mo">4,8%</td><td>2,1%</td><td class="mo">Monitor</td></tr>
+<tr><td>Belford Roxo</td><td>867</td><td>6,1%</td><td>622</td><td class="mo">4,2%</td><td>1,7%</td><td class="ok">OK</td></tr>
+<tr><td>Nilópolis</td><td>454</td><td>3,2%</td><td>326</td><td class="ok">3,1%</td><td>1,4%</td><td class="ok">OK</td></tr>
+<tr><td>Nova Iguaçu</td><td>248</td><td>1,7%</td><td>178</td><td class="ok">3,8%</td><td>1,5%</td><td class="ok">OK</td></tr>
+<tr><td>São Gonçalo</td><td>280</td><td>2,0%</td><td>201</td><td class="mo">4,0%</td><td>1,8%</td><td class="ok">OK</td></tr>
+<tr><td>Mesquita</td><td>248</td><td>1,7%</td><td>178</td><td class="ok">3,2%</td><td>1,6%</td><td class="ok">OK</td></tr>
+<tr><td>Queimados</td><td>118</td><td>0,8%</td><td>85</td><td class="ok">2,9%</td><td>1,2%</td><td class="ok">OK</td></tr>
+<tr><td>Niterói</td><td>38</td><td>0,3%</td><td>27</td><td class="ok">2,1%</td><td>0,9%</td><td class="ok">OK</td></tr>
+<tr><td><strong>TOTAL RJ</strong></td><td><strong>14.298</strong></td><td><strong>100%</strong></td><td><strong>10.247</strong></td><td class="al"><strong>5,8%</strong></td><td><strong>1,82%</strong></td><td class="mo"><strong>Monitor</strong></td></tr>
+</table>
+<h2>PSRs — Ranking</h2>
+<table><tr><th>#</th><th>PSR</th><th>Técnicos</th><th>OS/dia</th><th>% Prazo</th><th>Score</th></tr>
+<tr><td>01</td><td>TEL Telecom</td><td>1.200</td><td>3.840</td><td class="ok">91%</td><td class="ok">96/100</td></tr>
+<tr><td>02</td><td>Ability</td><td>800</td><td>2.560</td><td class="ok">89%</td><td class="ok">91/100</td></tr>
+<tr><td>03</td><td>RS Telecom</td><td>650</td><td>1.950</td><td class="mo">82%</td><td class="mo">78/100</td></tr>
+<tr><td>04</td><td>Telemont</td><td>580</td><td>1.450</td><td class="mo">79%</td><td class="mo">74/100</td></tr>
+<tr><td>—</td><td><strong>TOTAL</strong></td><td><strong>4.000</strong></td><td><strong>10.800</strong></td><td><strong>87%</strong></td><td><strong>—</strong></td></tr>
+</table>
+</div>
+<div class="footer"><span>V.tal — Sistema S&OP v1.0</span><span>Gerência S&OP / SUDESTE / RJ</span><span>${new Date().toLocaleString('pt-BR')}</span></div>
+</body></html>`);
+  w.document.close();
+  toast('✓ Relatório aberto — use Ctrl+P para salvar PDF');
+}
+
+/* ── MODAIS ── */
+function openModal(id){ document.getElementById(id)?.classList.add('on'); }
+function closeModal(id){ document.getElementById(id)?.classList.remove('on'); }
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.modal-overlay').forEach(o=>{
+    o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('on'); });
+  });
+});
+
+function saveTenant(){
+  const nm=document.getElementById('m-tenant-nome')?.value.trim();
+  if(!nm){ toast('⚠ Informe o nome da empresa'); return; }
+  toast('✓ Tenant "'+nm+'" cadastrado com sucesso!');
+  closeModal('modal-tenant');
+  document.getElementById('m-tenant-nome').value='';
+  document.getElementById('m-tenant-cnpj').value='';
+}
+
+function saveAction(){
+  const desc=document.getElementById('m-action-desc')?.value.trim();
+  const imp =document.getElementById('m-action-imp')?.value||'Médio';
+  const resp=document.getElementById('m-action-resp')?.value.trim()||'S&OP';
+  const prazo=document.getElementById('m-action-prazo')?.value||'—';
+  if(!desc){ toast('⚠ Informe a descrição da iniciativa'); return; }
+  const tb=document.getElementById('tab-actions');
+  const cls={Crítico:'ta',Alto:'to',Médio:'tb2',Baixo:'tg'}[imp]||'tb2';
+  const fmtPrazo=prazo&&prazo!=='—'?new Date(prazo+'T12:00').toLocaleDateString('pt-BR').slice(0,5):prazo;
+  const row=document.createElement('tr');
+  row.innerHTML=`<td class="b">${desc}</td><td><span class="tag ${cls}">${imp}</span></td><td>${resp}</td><td class="mo">${fmtPrazo}</td><td><span class="tag tb2">Plan.</span></td><td><button class="ebtn" style="padding:2px 7px;font-size:10px" onclick="updateStatus(this)">✎</button></td>`;
+  tb.appendChild(row);
+  closeModal('modal-action');
+  ['m-action-desc','m-action-resp','m-action-prazo'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  toast('✓ Iniciativa "'+desc+'" adicionada!');
+}
+
+function saveOS(){
+  const tipo=document.getElementById('m-os-tipo')?.value||'Instalação';
+  const mun =document.getElementById('m-os-mun')?.value||'Rio de Janeiro';
+  const ten =document.getElementById('m-os-ten')?.value||'TIM';
+  const psr =document.getElementById('m-os-psr')?.value||'TEL';
+  const tb=document.getElementById('tab-os');
+  const osId='OS-0'+String(Math.floor(80000+Math.random()*9999));
+  const tagClass=ten==='TIM'?'tb2':'ty2';
+  const row=document.createElement('tr');
+  row.innerHTML=`<td class="mo">${osId}</td><td>${tipo}</td><td>${mun}</td><td>—</td><td>${psr}</td><td><span class="tag ${tagClass}">${ten}</span></td><td><span class="tag to">⟳</span></td><td class="mo" style="color:var(--orange)">0h</td>`;
+  tb.insertBefore(row,tb.firstChild);
+  closeModal('modal-os');
+  toast('✓ OS '+osId+' registrada!');
+}
+
+function sendForgot(){
+  const e=document.getElementById('forgot-email')?.value.trim();
+  if(!e||!e.includes('@')){ toast('⚠ Informe um e-mail válido'); return; }
+  closeModal('modal-forgot');
+  toast('✓ Link enviado para: '+e);
+}
+
+/* ── STATUS CYCLING ── */
+const STATUS_CYCLE=[
+  '<span class="tag tb2">Plan.</span>',
+  '<span class="tag to">Exec.</span>',
+  '<span class="tag tg">✓ Concluído</span>',
+  '<span class="tag ta">Atrasado</span>'
+];
+function updateStatus(btn){
+  const row=btn.closest('tr');
+  if(!row) return;
+  const cells=[...row.cells];
+  const stTd=cells[cells.length-2];
+  const cur=stTd.innerHTML.trim();
+  const idx=STATUS_CYCLE.findIndex(s=>stTd.innerHTML.includes(s.match(/tag \w+/)?.[0]?.split(' ')[1]||'Plan'));
+  stTd.innerHTML=STATUS_CYCLE[(idx+1)%STATUS_CYCLE.length];
+  toast('✓ Status atualizado');
+}
+
+/* ── SORT ── */
+function sortTable(th, tbodyId, col){
+  const tbody=document.getElementById(tbodyId);
+  if(!tbody) return;
+  const rows=[...tbody.querySelectorAll('tr')];
+  const asc=!th.classList.contains('sort-asc');
+  document.querySelectorAll('.tbl th').forEach(t=>t.classList.remove('sort-asc','sort-desc'));
+  th.classList.add(asc?'sort-asc':'sort-desc');
+  rows.sort((a,b)=>{
+    const av=(a.cells[col]?.textContent||'').trim().replace(/[.,% ]/g,'');
+    const bv=(b.cells[col]?.textContent||'').trim().replace(/[.,% ]/g,'');
+    const an=parseFloat(av), bn=parseFloat(bv);
+    if(!isNaN(an)&&!isNaN(bn)) return asc?an-bn:bn-an;
+    return asc?av.localeCompare(bv,'pt-BR'):bv.localeCompare(av,'pt-BR');
+  });
+  rows.forEach(r=>tbody.appendChild(r));
+  toast('↕ Tabela ordenada');
+}
+
+/* ── FILTRO LIVE NAS TABELAS ── */
+function filterTable(input, tbodyId){
+  const q=input.value.toLowerCase();
+  document.getElementById(tbodyId)?.querySelectorAll('tr').forEach(r=>{
+    r.style.display=r.textContent.toLowerCase().includes(q)?'':'none';
+  });
+}
+
+/* ── TOAST ── */
+let _tt;
+function toast(msg, dur=3200){
+  const t=document.getElementById('toast'), m=document.getElementById('toast-msg');
+  if(!t||!m) return;
+  m.textContent=msg;
+  t.classList.add('on');
+  clearTimeout(_tt);
+  _tt=setTimeout(()=>t.classList.remove('on'), dur);
+}
+
+/* ── GRÁFICOS CANVAS ── */
+function drawAllCharts(){
+  drawBarChart('chart-os-tipo',
+    ['Instalação','Reparo','Manutenção','Backbone'],
+    [6507,3740,812,188],
+    ['#3D82F5','#F59E0B','#8B5CF6','#C8FF00']
+  );
+  drawBarChart('chart-psr-prod',
+    ['TEL','Ability','RS','Telemont'],
+    [3840,2560,1950,1450],
+    ['#C8FF00','#00C96A','#F59E0B','#F59E0B']
+  );
+  drawDonut('chart-vip-score', 50, 50);
+  drawLineChart('chart-infancia-hist',
+    ['Mar','Abr','Mai','Jun','Jul'],
+    [4.2,4.8,5.1,5.5,5.8],
+    5.0, '#FF3A55'
+  );
+  drawLineChart('chart-instalacao-hist',
+    ['Mar','Abr','Mai','Jun','Jul'],
+    [88.5,89.2,90.1,90.8,91.3],
+    90.0, '#00C96A'
+  );
+  drawBarChart('chart-municipio-ua',
+    ['RJ','D.Caxias','B.Roxo','Nilóp.','N.Iguaçu','S.Gonçalo'],
+    [9378,1340,867,454,248,280],
+    ['#C8FF00','#8B5CF6','#3D82F5','#F59E0B','#00C96A','#FF3A55']
+  );
+  drawBarChart('chart-sop-demanda',
+    ['Mai','Jun','Jul','Ago(proj)'],
+    [9800,10100,10247,10850],
+    ['#3D82F5','#3D82F5','#C8FF00','#F59E0B']
+  );
+}
+
+function getChartColors(){
+  const dark=document.documentElement.getAttribute('data-theme')==='dark';
+  return {
+    bg: dark?'#1A1D26':'#F2F3F6',
+    text: dark?'#7A8494':'#6B7480',
+    line: dark?'rgba(255,255,255,.07)':'rgba(0,0,0,.07)'
+  };
+}
+
+function drawBarChart(id, labels, values, colors){
+  const canvas=document.getElementById(id);
+  if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  const W=canvas.offsetWidth||canvas.width||300;
+  const H=canvas.offsetHeight||canvas.height||120;
+  canvas.width=W; canvas.height=H;
+  const {bg,text,line}=getChartColors();
+  ctx.clearRect(0,0,W,H);
+  const pad={l:8,r:8,t:12,b:32};
+  const max=Math.max(...values)*1.15;
+  const bw=Math.floor((W-pad.l-pad.r)/labels.length)-4;
+  ctx.font=`600 10px 'Instrument Sans',sans-serif`;
+  labels.forEach((lbl,i)=>{
+    const x=pad.l+i*((W-pad.l-pad.r)/labels.length)+2;
+    const barH=((values[i]/max)*(H-pad.t-pad.b));
+    const y=H-pad.b-barH;
+    // bar
+    ctx.fillStyle=colors[i%colors.length];
+    const r=3;
+    ctx.beginPath();
+    ctx.moveTo(x+r,y); ctx.lineTo(x+bw-r,y);
+    ctx.arcTo(x+bw,y,x+bw,y+r,r); ctx.lineTo(x+bw,y+barH);
+    ctx.lineTo(x,y+barH); ctx.lineTo(x,y+r);
+    ctx.arcTo(x,y,x+r,y,r); ctx.closePath();
+    ctx.fill();
+    // value
+    ctx.fillStyle=text;
+    ctx.textAlign='center';
+    const valStr=values[i]>999?Math.round(values[i]/1000)+'k':values[i];
+    ctx.fillText(valStr, x+bw/2, y-3);
+    // label
+    ctx.fillText(lbl, x+bw/2, H-4);
+  });
+}
+
+function drawDonut(id, val, total){
+  const canvas=document.getElementById(id);
+  if(!canvas) return;
+  const W=canvas.offsetWidth||80, H=canvas.offsetHeight||80;
+  canvas.width=W; canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  const cx=W/2, cy=H/2, r=Math.min(W,H)/2-6, sw=8;
+  ctx.clearRect(0,0,W,H);
+  const {bg}=getChartColors();
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+  ctx.strokeStyle='rgba(200,255,0,.15)'; ctx.lineWidth=sw; ctx.stroke();
+  const angle=(val/total)*Math.PI*2;
+  ctx.beginPath(); ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+angle);
+  ctx.strokeStyle='#C8FF00'; ctx.lineWidth=sw;
+  ctx.lineCap='round'; ctx.stroke();
+  ctx.fillStyle='#C8FF00';
+  ctx.font=`bold ${Math.floor(W*.18)}px 'Syne',sans-serif`;
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(val, cx, cy);
+}
+
+function drawLineChart(id, labels, values, threshold, color){
+  const canvas=document.getElementById(id);
+  if(!canvas) return;
+  const W=canvas.offsetWidth||canvas.width||300;
+  const H=canvas.offsetHeight||canvas.height||100;
+  canvas.width=W; canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  const {bg,text,line}=getChartColors();
+  ctx.clearRect(0,0,W,H);
+  const pad={l:30,r:10,t:10,b:22};
+  const min=Math.min(...values)*0.97;
+  const max=Math.max(...values)*1.03;
+  const scX=i=>pad.l+i*(W-pad.l-pad.r)/(labels.length-1);
+  const scY=v=>H-pad.b-((v-min)/(max-min))*(H-pad.t-pad.b);
+  // threshold line
+  const ty=scY(threshold);
+  ctx.setLineDash([3,3]);
+  ctx.strokeStyle='rgba(255,58,85,.4)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(pad.l,ty); ctx.lineTo(W-pad.r,ty); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='rgba(255,58,85,.5)';
+  ctx.font=`9px 'DM Mono',monospace`; ctx.textAlign='left';
+  ctx.fillText('Lim '+threshold, pad.l+2, ty-3);
+  // area
+  ctx.beginPath();
+  values.forEach((v,i)=>{ i===0?ctx.moveTo(scX(i),scY(v)):ctx.lineTo(scX(i),scY(v)); });
+  ctx.lineTo(scX(values.length-1),H-pad.b);
+  ctx.lineTo(scX(0),H-pad.b); ctx.closePath();
+  ctx.fillStyle=color+'22'; ctx.fill();
+  // line
+  ctx.beginPath();
+  values.forEach((v,i)=>{ i===0?ctx.moveTo(scX(i),scY(v)):ctx.lineTo(scX(i),scY(v)); });
+  ctx.strokeStyle=color; ctx.lineWidth=2; ctx.lineJoin='round'; ctx.stroke();
+  // dots + labels
+  ctx.font=`600 9px 'Instrument Sans',sans-serif`;
+  values.forEach((v,i)=>{
+    ctx.beginPath(); ctx.arc(scX(i),scY(v),3,0,Math.PI*2);
+    ctx.fillStyle=color; ctx.fill();
+    ctx.fillStyle=text; ctx.textAlign='center';
+    ctx.fillText(labels[i],scX(i),H-5);
+    if(i===values.length-1){
+      ctx.fillStyle=color;
+      ctx.fillText(v+'%',scX(i),scY(v)-8);
+    }
+  });
+}
+
+/* ── COUNTER OS AO VIVO ── */
+setInterval(()=>{
+  const el=document.getElementById('kos');
+  if(el&&document.getElementById('pa')?.classList.contains('on')){
+    const v=parseInt(el.textContent.replace(/\./g,'')||'10247');
+    const n=Math.min(12000,Math.max(9800,v+Math.floor(Math.random()*11)-5));
+    el.textContent=n.toLocaleString('pt-BR');
+  }
+},3500);
+
+/* ── NOTIFICAÇÕES ── */
+const NOTIFS=[
+  {t:'Alerta VIP',   m:'Infância 30D atingiu 5,8% — acima do limite de 5,0% em RJ.',  c:'red',  ts:'16:31'},
+  {t:'Monitor',      m:'Repetida 30D em 9,4% — próxima ao limite de 10,0%.',           c:'orange',ts:'15:47'},
+  {t:'S&OP',         m:'Reunião confirmada para 05/08/2025 às 09h — Alinhamento executivo.', c:'blue',ts:'14:20'},
+  {t:'Produtividade',m:'TEL Telecom: 3.840 OS/dia — melhor desempenho do mês.',       c:'green', ts:'13:55'},
+  {t:'Plano de Ação',m:'Iniciativa "Reforço TEL-RJ" marcada como Concluída.',          c:'green', ts:'11:30'},
+];
+let _notifOpen=false;
+function toggleNotif(){
+  _notifOpen=!_notifOpen;
+  const panel=document.getElementById('notif-panel');
+  if(!panel) return;
+  panel.style.display=_notifOpen?'block':'none';
+  const badge=document.getElementById('notif-badge');
+  if(badge&&_notifOpen){ badge.style.display='none'; }
+}
+function buildNotifPanel(){
+  const panel=document.getElementById('notif-panel');
+  if(!panel) return;
+  panel.innerHTML=`<div style="padding:12px 14px;border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center">
+    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px">Notificações</div>
+    <button onclick="toggleNotif()" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px">✕</button>
+  </div>`+
+  NOTIFS.map(n=>{
+    const col={red:'var(--red)',orange:'var(--orange)',green:'var(--green)',blue:'var(--blue)'}[n.c]||'var(--vy)';
+    return `<div style="padding:10px 14px;border-bottom:1px solid var(--bdr);cursor:default" onmouseenter="this.style.background='var(--bg3)'" onmouseleave="this.style.background=''">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">
+        <div style="width:6px;height:6px;border-radius:50%;background:${col};flex-shrink:0"></div>
+        <span style="font-size:11px;font-weight:700;color:var(--t1)">${n.t}</span>
+        <span style="font-size:10px;color:var(--t3);margin-left:auto">${n.ts}</span>
+      </div>
+      <div style="font-size:11.5px;color:var(--t2);line-height:1.5;padding-left:12px">${n.m}</div>
+    </div>`;
+  }).join('')+
+  `<div style="padding:10px 14px;text-align:center"><button class="ebtn" style="width:100%;justify-content:center" onclick="toast('✓ Todas as notificações marcadas como lidas');toggleNotif()">Marcar todas como lidas</button></div>`;
+}
+
+/* ── INIT ── */
+window.addEventListener('DOMContentLoaded',()=>{
+  buildNotifPanel();
+  // fechar notif ao clicar fora
+  document.addEventListener('click',e=>{
+    const panel=document.getElementById('notif-panel');
+    const btn=document.getElementById('notif-btn');
+    if(panel&&_notifOpen&&!panel.contains(e.target)&&e.target!==btn&&!btn?.contains(e.target)){
+      _notifOpen=false; panel.style.display='none';
+    }
+  });
+});
+</script>
+</body>
 </html>
+<script>
+// Extra: draw VIP score history bars (sparkline style)
+function drawVipHistBars(id){
+  const canvas=document.getElementById(id);
+  if(!canvas)return;
+  const W=canvas.offsetWidth||120,H=canvas.offsetHeight||44;
+  canvas.width=W; canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  const vals=[50,50,50,50,50];
+  const bw=Math.floor(W/vals.length)-3;
+  vals.forEach((v,i)=>{
+    const x=i*(bw+3);
+    const barH=(v/50)*H;
+    ctx.fillStyle=i===vals.length-1?'#C8FF00':'rgba(200,255,0,.35)';
+    const r=2;
+    ctx.beginPath();
+    ctx.moveTo(x+r,H-barH);ctx.lineTo(x+bw-r,H-barH);
+    ctx.arcTo(x+bw,H-barH,x+bw,H-barH+r,r);ctx.lineTo(x+bw,H);ctx.lineTo(x,H);ctx.lineTo(x,H-barH+r);
+    ctx.arcTo(x,H-barH,x+r,H-barH,r);ctx.closePath();ctx.fill();
+  });
+}
+// Override drawAllCharts to also include vip hist
+const _origDraw=drawAllCharts;
+function drawAllCharts(){
+  _origDraw();
+  drawVipHistBars('chart-vip-hist');
+}
+// Trigger on load
+window.addEventListener('load',()=>setTimeout(drawAllCharts,300));
+</script>
